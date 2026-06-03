@@ -1,6 +1,6 @@
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_REGEX = /^\d{10,15}$/;
-const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 
 const ALLOWED_GENDERS = new Set(["male", "female", "other"]);
 const ALLOWED_MARITAL_STATUSES = new Set(["never married", "divorced", "widowed", ""]);
@@ -64,7 +64,7 @@ const validateRegistrationInput = (payload) => {
   }
 
   if (!PASSWORD_REGEX.test(password)) {
-    errors.push("Password must be 8+ characters and include upper, lower, number, and special character.");
+    errors.push("Password mein kam se kam 8 characters, ek capital letter (A-Z) aur ek number (0-9) hona chahiye. Example: Ramesh123");
   }
 
   if (!PHONE_REGEX.test(phone)) {

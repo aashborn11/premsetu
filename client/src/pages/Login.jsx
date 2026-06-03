@@ -4,30 +4,31 @@ import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [email, setEmail]       = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [formError, setFormError] = useState("");
-  const { login } = useAuth();
-  const navigate = useNavigate();
+  const [error, setError] = useState("");
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setFormError("");
+  const { login } = useAuth();
+  const navigate  = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
 
     if (!email || !password) {
-      setFormError("Email aur password dono bharen. / Please enter both email and password.");
+      setError("Please enter both your email address and password.");
       return;
     }
 
     try {
       setSubmitting(true);
       await login({ email, password });
-      toast.success("Login safal raha!");
+      toast.success("Welcome back!");
       navigate("/dashboard");
-    } catch (error) {
-      const msg = error.response?.data?.message || "Login failed. Please check your email and password.";
-      setFormError(msg);
+    } catch (err) {
+      const msg = err.response?.data?.message || "Login failed. Please check your email and password.";
+      setError(msg);
     } finally {
       setSubmitting(false);
     }
@@ -36,80 +37,79 @@ const Login = () => {
   return (
     <section className="auth-shell">
       <div className="auth-layout">
+
+        {/* LEFT PANEL */}
         <aside className="auth-showcase">
           <div>
-            <span className="eyebrow">Wapas aaiye</span>
-            <h1>Apne matches aur conversations dekhein.</h1>
+            <span className="eyebrow">Welcome back</span>
+            <h1>Return to your matches and conversations.</h1>
           </div>
           <p className="support-copy">
-            Login karein aur apna profile, matches aur private chat access karein.
+            Login and continue where you left off — view profiles, send interest, and chat with your matches.
           </p>
           <div className="auth-point-grid">
-            <article className="auth-point">
-              <strong>Aapka profile safe hai</strong>
-              <p>Sirf aap apna profile dekh aur edit kar sakte hain.</p>
-            </article>
-            <article className="auth-point">
-              <strong>Mutual interest ke baad chat</strong>
-              <p>Dono taraf se interest hone ke baad hi private chat khulti hai.</p>
-            </article>
-            <article className="auth-point">
-              <strong>Serious rishte</strong>
-              <p>Yahaan sirf serious log hain — koi time waste nahi.</p>
-            </article>
+            {[
+              { t: "Your profile is safe",     d: "Only you can see and edit your full account details." },
+              { t: "Chat after mutual interest", d: "Private conversations open only when both sides are interested." },
+              { t: "Genuine people only",        d: "Everyone here is looking for a serious relationship." }
+            ].map(i => (
+              <article key={i.t} className="auth-point">
+                <strong>{i.t}</strong>
+                <p>{i.d}</p>
+              </article>
+            ))}
           </div>
         </aside>
 
+        {/* FORM */}
         <form className="auth-card" onSubmit={handleSubmit}>
           <div>
-            <span className="eyebrow">Login karein</span>
-            <h1>PremSetu mein Sign In</h1>
-            <p>Apna email aur password enter karein.</p>
+            <span className="eyebrow">Sign in</span>
+            <h1>Login to PremSetu</h1>
+            <p>Enter your email and password to continue.</p>
           </div>
 
           <div className="form-grid single-column">
             <label className="field-stack">
               <span>Email Address</span>
               <input
-                placeholder="aapka@email.com"
+                placeholder="yourname@email.com"
                 type="email"
                 value={email}
-                onChange={(e) => { setEmail(e.target.value); setFormError(""); }}
+                onChange={e => { setEmail(e.target.value); setError(""); }}
+                autoComplete="email"
               />
             </label>
 
             <label className="field-stack">
               <span>Password</span>
               <input
-                placeholder="Apna password dalein"
+                placeholder="Your password"
                 type="password"
                 value={password}
-                onChange={(e) => { setPassword(e.target.value); setFormError(""); }}
+                onChange={e => { setPassword(e.target.value); setError(""); }}
+                autoComplete="current-password"
               />
             </label>
           </div>
 
-          {formError && (
+          {error && (
             <div style={{
-              padding: "14px 18px",
-              borderRadius: 16,
-              background: "#fff0ed",
-              border: "1px solid rgba(181,69,27,0.3)",
-              color: "#8b3214",
-              fontWeight: 600,
-              fontSize: "0.92rem",
-              lineHeight: 1.6
+              padding: "14px 18px", borderRadius: 14,
+              background: "#fff1f0", border: "1.5px solid #fca5a5",
+              color: "#b91c1c", fontWeight: 600, fontSize: "0.9rem", lineHeight: 1.6
             }}>
-              ⚠ {formError}
+              ⚠ {error}
             </div>
           )}
 
-          <button className="primary-button full-width" disabled={submitting}>
-            {submitting ? "Login ho raha hai..." : "Login Karein"}
+          <button className="primary-button full-width" type="submit" disabled={submitting}>
+            {submitting ? "Logging in..." : "Login"}
           </button>
 
-          <p>
-            Naya account chahiye? <Link to="/register">Register karein</Link>
+          <p style={{ textAlign: "center" }}>
+            Don't have an account?{" "}
+            <Link to="/register" style={{ color: "var(--primary)", fontWeight: 700 }}>Register here</Link>
           </p>
         </form>
       </div>
