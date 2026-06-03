@@ -85,23 +85,6 @@ const Register = () => {
     }
   };
 
-  const Tick = ({ ok }) => (
-    <span style={{
-      display: "inline-flex", alignItems: "center", gap: 6,
-      color: ok ? "#16a34a" : "#9ca3af", fontSize: "0.82rem", fontWeight: 600,
-      transition: "color 0.2s ease"
-    }}>
-      <span style={{
-        width: 16, height: 16, borderRadius: "50%",
-        background: ok ? "#16a34a" : "#e5e7eb",
-        display: "grid", placeItems: "center",
-        fontSize: "0.6rem", color: "#fff",
-        transition: "background 0.2s ease"
-      }}>{ok ? "✓" : ""}</span>
-      {ok ? "" : ""}
-    </span>
-  );
-
   return (
     <section className="auth-shell">
       <div className="auth-layout">
