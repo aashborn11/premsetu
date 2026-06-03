@@ -3,38 +3,31 @@ import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 
-const loginHighlights = [
-  {
-    title: "Your profile, your pace",
-    text: "Pick up where you left off, finish your profile, and continue with the matches that matter."
-  },
-  {
-    title: "Mutual interest first",
-    text: "PremSetu keeps conversations more intentional by opening chat only after both sides show interest."
-  },
-  {
-    title: "Built for trust",
-    text: "Detailed profiles and cleaner design help users and families make decisions with more comfort."
-  }
-];
-
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [formError, setFormError] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setFormError("");
+
+    if (!email || !password) {
+      setFormError("Email aur password dono bharen. / Please enter both email and password.");
+      return;
+    }
 
     try {
       setSubmitting(true);
       await login({ email, password });
-      toast.success("Logged in successfully.");
+      toast.success("Login safal raha!");
       navigate("/dashboard");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Login failed.");
+      const msg = error.response?.data?.message || "Login failed. Please check your email and password.";
+      setFormError(msg);
     } finally {
       setSubmitting(false);
     }
@@ -45,57 +38,78 @@ const Login = () => {
       <div className="auth-layout">
         <aside className="auth-showcase">
           <div>
-            <span className="eyebrow">Welcome back</span>
-            <h1>Return to your matches, profile progress, and conversations.</h1>
+            <span className="eyebrow">Wapas aaiye</span>
+            <h1>Apne matches aur conversations dekhein.</h1>
           </div>
-
           <p className="support-copy">
-            Login is simple and secure. If your English is basic, that is okay, the product is being shaped to stay
-            cleaner and easier with every update.
+            Login karein aur apna profile, matches aur private chat access karein.
           </p>
-
           <div className="auth-point-grid">
-            {loginHighlights.map((item) => (
-              <article key={item.title} className="auth-point">
-                <strong>{item.title}</strong>
-                <p>{item.text}</p>
-              </article>
-            ))}
+            <article className="auth-point">
+              <strong>Aapka profile safe hai</strong>
+              <p>Sirf aap apna profile dekh aur edit kar sakte hain.</p>
+            </article>
+            <article className="auth-point">
+              <strong>Mutual interest ke baad chat</strong>
+              <p>Dono taraf se interest hone ke baad hi private chat khulti hai.</p>
+            </article>
+            <article className="auth-point">
+              <strong>Serious rishte</strong>
+              <p>Yahaan sirf serious log hain — koi time waste nahi.</p>
+            </article>
           </div>
         </aside>
 
         <form className="auth-card" onSubmit={handleSubmit}>
           <div>
-            <span className="eyebrow">Login to continue</span>
-            <h1>Sign in to PremSetu</h1>
-            <p>Continue your search, review incoming interests, and pick up your private conversations.</p>
+            <span className="eyebrow">Login karein</span>
+            <h1>PremSetu mein Sign In</h1>
+            <p>Apna email aur password enter karein.</p>
           </div>
 
           <div className="form-grid single-column">
             <label className="field-stack">
               <span>Email Address</span>
-              <input placeholder="name@example.com" type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
+              <input
+                placeholder="aapka@email.com"
+                type="email"
+                value={email}
+                onChange={(e) => { setEmail(e.target.value); setFormError(""); }}
+              />
             </label>
 
             <label className="field-stack">
               <span>Password</span>
               <input
-                placeholder="Enter your password"
+                placeholder="Apna password dalein"
                 type="password"
                 value={password}
-                onChange={(event) => setPassword(event.target.value)}
+                onChange={(e) => { setPassword(e.target.value); setFormError(""); }}
               />
             </label>
           </div>
 
-          <div className="helper-ribbon">Simple note: clear profiles and recent activity usually get better attention.</div>
+          {formError && (
+            <div style={{
+              padding: "14px 18px",
+              borderRadius: 16,
+              background: "#fff0ed",
+              border: "1px solid rgba(181,69,27,0.3)",
+              color: "#8b3214",
+              fontWeight: 600,
+              fontSize: "0.92rem",
+              lineHeight: 1.6
+            }}>
+              ⚠ {formError}
+            </div>
+          )}
 
           <button className="primary-button full-width" disabled={submitting}>
-            {submitting ? "Signing in..." : "Login"}
+            {submitting ? "Login ho raha hai..." : "Login Karein"}
           </button>
 
           <p>
-            New here? <Link to="/register">Create an account</Link>
+            Naya account chahiye? <Link to="/register">Register karein</Link>
           </p>
         </form>
       </div>

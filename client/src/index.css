@@ -1,25 +1,25 @@
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
 
 :root {
-  --forest: #3b4a3a;
-  --forest-deep: #263125;
-  --forest-soft: #516250;
-  --ivory: #f0ede6;
-  --linen: #faf6ef;
-  --sand: #d9c6b3;
-  --clay: #b88968;
-  --gold: #c4a36f;
-  --surface: rgba(255, 253, 249, 0.82);
-  --surface-strong: #fffdf9;
-  --surface-soft: rgba(240, 237, 230, 0.78);
-  --ink: #2f392f;
-  --muted: #6f796f;
-  --muted-soft: #879084;
-  --border: rgba(59, 74, 58, 0.14);
-  --border-strong: rgba(59, 74, 58, 0.22);
-  --shadow-lg: 0 30px 90px rgba(38, 49, 37, 0.12);
-  --shadow-md: 0 18px 48px rgba(38, 49, 37, 0.1);
-  --shadow-sm: 0 10px 26px rgba(38, 49, 37, 0.08);
+  --forest: #b5451b;
+  --forest-deep: #8b3214;
+  --forest-soft: #c8562a;
+  --ivory: #fff5f0;
+  --linen: #fffaf7;
+  --sand: #f5ddd0;
+  --clay: #c8562a;
+  --gold: #e07540;
+  --surface: rgba(255, 255, 255, 0.96);
+  --surface-strong: #ffffff;
+  --surface-soft: rgba(255, 245, 240, 0.92);
+  --ink: #1a1a1a;
+  --muted: #555555;
+  --muted-soft: #777777;
+  --border: rgba(181, 69, 27, 0.14);
+  --border-strong: rgba(181, 69, 27, 0.26);
+  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.10);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.06);
   --font-body: "Plus Jakarta Sans", sans-serif;
   --font-heading: "Playfair Display", serif;
   --max-width: 1240px;
@@ -37,29 +37,9 @@ body {
   margin: 0;
   min-height: 100vh;
   font-family: var(--font-body);
+  font-size: 16px;
   color: var(--ink);
-  background:
-    radial-gradient(circle at top left, rgba(217, 198, 179, 0.36), transparent 28%),
-    radial-gradient(circle at top right, rgba(59, 74, 58, 0.11), transparent 26%),
-    radial-gradient(circle at bottom right, rgba(184, 137, 104, 0.16), transparent 22%),
-    linear-gradient(180deg, #fffdf9 0%, #f7f2ea 100%);
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(rgba(59, 74, 58, 0.025), rgba(59, 74, 58, 0.025)),
-    repeating-linear-gradient(
-      90deg,
-      transparent 0,
-      transparent 112px,
-      rgba(59, 74, 58, 0.02) 112px,
-      rgba(59, 74, 58, 0.02) 113px
-    );
-  opacity: 0.5;
+  background: #fffaf7;
 }
 
 #root {
@@ -509,9 +489,7 @@ p {
   padding: 28px;
   position: relative;
   overflow: hidden;
-  background:
-    radial-gradient(circle at top right, rgba(255, 255, 255, 0.16), transparent 34%),
-    linear-gradient(160deg, var(--forest) 0%, #435542 55%, #5c6c5a 100%);
+  background: linear-gradient(160deg, var(--forest-deep), var(--forest));
   color: var(--ivory);
 }
 
@@ -761,9 +739,7 @@ p {
 
 .auth-showcase {
   padding: 34px;
-  background:
-    radial-gradient(circle at top left, rgba(240, 237, 230, 0.16), transparent 28%),
-    linear-gradient(160deg, var(--forest-deep), var(--forest) 60%, #566955 100%);
+  background: linear-gradient(160deg, var(--forest-deep), var(--forest));
   color: var(--ivory);
   display: grid;
   gap: 22px;
@@ -879,9 +855,7 @@ p {
 }
 
 .dashboard-hero-card {
-  background:
-    radial-gradient(circle at top right, rgba(240, 237, 230, 0.14), transparent 28%),
-    linear-gradient(160deg, var(--forest-deep), var(--forest) 65%, #5d6f5b 100%);
+  background: linear-gradient(160deg, var(--forest-deep), var(--forest));
   color: var(--ivory);
 }
 
