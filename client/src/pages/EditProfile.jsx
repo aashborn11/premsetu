@@ -31,6 +31,16 @@ const stepDefinitions = [
     fields: ["bio", "height", "maritalStatus"]
   },
   {
+    title: "Family & Lifestyle",
+    description: "Help families understand your background, values, and daily life.",
+    fields: ["diet", "familyType", "familyValues", "parentsOccupation", "siblings"]
+  },
+  {
+    title: "Horoscope",
+    description: "Optional — store birth details now for kundli matching later. Nothing here is required.",
+    fields: ["manglikStatus", "birthTime", "birthPlace"]
+  },
+  {
     title: "Photos",
     description: "Good photos create trust quickly. Keep them simple and natural.",
     fields: []
@@ -50,29 +60,91 @@ const fieldMeta = {
     ]
   },
   phone: { label: "Phone Number", type: "text" },
-  religion: { label: "Religion", type: "text" },
-  caste: { label: "Caste", type: "text" },
+  religion: { label: "Religion", type: "text", placeholder: "e.g. Hindu, Muslim, Sikh, Christian, Jain…" },
+  caste: { label: "Caste / Community", type: "text" },
   gotra: { label: "Gotra", type: "text" },
-  motherTongue: { label: "Mother Tongue", type: "text" },
+  motherTongue: { label: "Mother Tongue", type: "text", placeholder: "e.g. Hindi, Marathi, Tamil…" },
   city: { label: "City", type: "text" },
   state: { label: "State", type: "text" },
-  education: { label: "Education", type: "text" },
-  profession: { label: "Profession", type: "text" },
-  annualIncome: { label: "Annual Income", type: "text" },
+  education: { label: "Education", type: "text", placeholder: "e.g. B.Tech, MBA, MBBS…" },
+  profession: { label: "Profession", type: "text", placeholder: "e.g. Software Engineer, Doctor…" },
+  annualIncome: { label: "Annual Income", type: "text", placeholder: "e.g. 8–10 LPA (optional)" },
   bio: {
     label: "About Me",
     type: "textarea",
     placeholder: "Share your personality, family values, and what kind of life partner you are hoping to meet."
   },
-  height: { label: "Height", type: "text" },
+  height: { label: "Height", type: "text", placeholder: "e.g. 5'7\" or 170 cm" },
   maritalStatus: {
     label: "Marital Status",
     type: "select",
     options: [
+      { value: "", label: "Not specified" },
       { value: "never married", label: "Never Married" },
       { value: "divorced", label: "Divorced" },
-      { value: "widowed", label: "Widowed" }
+      { value: "widowed", label: "Widowed" },
+      { value: "awaiting divorce", label: "Awaiting Divorce" }
     ]
+  },
+  diet: {
+    label: "Diet Preference",
+    type: "select",
+    options: [
+      { value: "", label: "Not specified" },
+      { value: "veg", label: "Vegetarian" },
+      { value: "non-veg", label: "Non-Vegetarian" },
+      { value: "eggetarian", label: "Eggetarian" },
+      { value: "vegan", label: "Vegan" }
+    ]
+  },
+  familyType: {
+    label: "Family Type",
+    type: "select",
+    options: [
+      { value: "", label: "Not specified" },
+      { value: "nuclear", label: "Nuclear Family" },
+      { value: "joint", label: "Joint Family" }
+    ]
+  },
+  familyValues: {
+    label: "Family Values",
+    type: "select",
+    options: [
+      { value: "", label: "Not specified" },
+      { value: "traditional", label: "Traditional" },
+      { value: "moderate", label: "Moderate" },
+      { value: "liberal", label: "Liberal" }
+    ]
+  },
+  parentsOccupation: {
+    label: "Parents' Occupation",
+    type: "text",
+    placeholder: "e.g. Retired government officer"
+  },
+  siblings: {
+    label: "Siblings",
+    type: "text",
+    placeholder: "e.g. 1 brother, 2 sisters"
+  },
+  manglikStatus: {
+    label: "Manglik Status",
+    type: "select",
+    options: [
+      { value: "", label: "Not specified" },
+      { value: "manglik", label: "Manglik" },
+      { value: "non-manglik", label: "Non-Manglik" },
+      { value: "dont know", label: "Don't Know" }
+    ]
+  },
+  birthTime: {
+    label: "Birth Time",
+    type: "text",
+    placeholder: "e.g. 10:30 AM"
+  },
+  birthPlace: {
+    label: "Birth Place",
+    type: "text",
+    placeholder: "City or town of birth"
   }
 };
 
@@ -102,7 +174,15 @@ const EditProfile = () => {
     annualIncome: user?.annualIncome || "",
     bio: user?.bio || "",
     height: user?.height || "",
-    maritalStatus: user?.maritalStatus || "never married"
+    maritalStatus: user?.maritalStatus || "",
+    diet: user?.diet || "",
+    familyType: user?.familyType || "",
+    familyValues: user?.familyValues || "",
+    parentsOccupation: user?.parentsOccupation || "",
+    siblings: user?.siblings || "",
+    manglikStatus: user?.manglikStatus || "",
+    birthTime: user?.birthTime || "",
+    birthPlace: user?.birthPlace || ""
   });
 
   const currentStep = useMemo(() => stepDefinitions[step], [step]);
@@ -160,7 +240,11 @@ const EditProfile = () => {
     const saved = await handleSaveDetails();
     if (!saved) return;
     const uploaded = await handleUploadPhotos();
-    if (uploaded) navigate("/profile");
+    if (uploaded) {
+      // New / unpaid users go to the membership page as the final step.
+      // Paid members who edit their profile return to their profile page.
+      navigate(user?.isPaid ? "/profile" : "/membership");
+    }
   };
 
   return (
@@ -202,15 +286,15 @@ const EditProfile = () => {
           <div className="helper-card">
             <strong>Quick tip</strong>
             <p>
-              The strongest profiles usually have a good photo, a warm bio, and honest cultural details. Zyada polish
-              ki zaroorat nahi, just sincerity.
+              The strongest profiles usually have a good photo, a warm bio, and honest details. No need for
+              extra polish — just sincerity.
             </p>
           </div>
         </aside>
 
         <div className="builder-card">
           <div className="builder-header">
-            <span className="eyebrow">Step {step + 1}</span>
+            <span className="eyebrow">Step {step + 1} of {stepDefinitions.length}</span>
             <h2>{currentStep.title}</h2>
             <p className="muted-copy">{currentStep.description}</p>
           </div>
@@ -314,7 +398,7 @@ const FormSection = ({ formData, setFormData, fields }) => (
             <span>{config.label}</span>
             <textarea
               rows="5"
-              placeholder={config.placeholder}
+              placeholder={config.placeholder || config.label}
               value={formData[field]}
               onChange={(event) => setFormData({ ...formData, [field]: event.target.value })}
             />
@@ -327,7 +411,7 @@ const FormSection = ({ formData, setFormData, fields }) => (
           <span>{config.label}</span>
           <input
             type={config.type}
-            placeholder={config.label}
+            placeholder={config.placeholder || config.label}
             value={formData[field]}
             onChange={(event) => setFormData({ ...formData, [field]: event.target.value })}
           />

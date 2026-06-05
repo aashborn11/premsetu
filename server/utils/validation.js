@@ -3,7 +3,11 @@ const PHONE_REGEX = /^\d{10,15}$/;
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 
 const ALLOWED_GENDERS = new Set(["male", "female", "other"]);
-const ALLOWED_MARITAL_STATUSES = new Set(["never married", "divorced", "widowed", ""]);
+const ALLOWED_MARITAL_STATUSES = new Set(["never married", "divorced", "widowed", "awaiting divorce", ""]);
+const ALLOWED_DIETS = new Set(["veg", "non-veg", "eggetarian", "vegan", ""]);
+const ALLOWED_FAMILY_TYPES = new Set(["nuclear", "joint", ""]);
+const ALLOWED_FAMILY_VALUES = new Set(["traditional", "moderate", "liberal", ""]);
+const ALLOWED_MANGLIK_STATUSES = new Set(["manglik", "non-manglik", "dont know", ""]);
 
 const toTrimmedString = (value, maxLength = 120) => {
   if (value === undefined || value === null) {
@@ -168,7 +172,11 @@ const validateProfileUpdate = (payload) => {
     ["education", 80],
     ["profession", 80],
     ["annualIncome", 40],
-    ["height", 30]
+    ["height", 30],
+    ["parentsOccupation", 120],
+    ["siblings", 60],
+    ["birthTime", 10],
+    ["birthPlace", 80]
   ];
 
   textFields.forEach(([field, maxLength]) => {
@@ -176,6 +184,42 @@ const validateProfileUpdate = (payload) => {
       data[field] = toTrimmedString(payload[field], maxLength);
     }
   });
+
+  if (payload.diet !== undefined) {
+    const diet = toTrimmedString(payload.diet, 30).toLowerCase();
+    if (!ALLOWED_DIETS.has(diet)) {
+      errors.push("Please select a valid diet preference.");
+    } else {
+      data.diet = diet;
+    }
+  }
+
+  if (payload.familyType !== undefined) {
+    const familyType = toTrimmedString(payload.familyType, 30).toLowerCase();
+    if (!ALLOWED_FAMILY_TYPES.has(familyType)) {
+      errors.push("Please select a valid family type.");
+    } else {
+      data.familyType = familyType;
+    }
+  }
+
+  if (payload.familyValues !== undefined) {
+    const familyValues = toTrimmedString(payload.familyValues, 30).toLowerCase();
+    if (!ALLOWED_FAMILY_VALUES.has(familyValues)) {
+      errors.push("Please select valid family values.");
+    } else {
+      data.familyValues = familyValues;
+    }
+  }
+
+  if (payload.manglikStatus !== undefined) {
+    const manglikStatus = toTrimmedString(payload.manglikStatus, 30).toLowerCase();
+    if (!ALLOWED_MANGLIK_STATUSES.has(manglikStatus)) {
+      errors.push("Please select a valid Manglik status.");
+    } else {
+      data.manglikStatus = manglikStatus;
+    }
+  }
 
   if (payload.maritalStatus !== undefined) {
     const maritalStatus = toTrimmedString(payload.maritalStatus, 30).toLowerCase();
@@ -210,10 +254,16 @@ const sanitizeSuggestionFilters = (payload) => {
     minAge,
     maxAge,
     religion: toTrimmedString(payload.religion, 60),
+    caste: toTrimmedString(payload.caste, 80),
+    motherTongue: toTrimmedString(payload.motherTongue, 60),
     state: toTrimmedString(payload.state, 60),
     city: toTrimmedString(payload.city, 60),
     education: toTrimmedString(payload.education, 80),
-    profession: toTrimmedString(payload.profession, 80)
+    profession: toTrimmedString(payload.profession, 80),
+    maritalStatus: toTrimmedString(payload.maritalStatus, 30),
+    diet: toTrimmedString(payload.diet, 30),
+    manglikStatus: toTrimmedString(payload.manglikStatus, 30),
+    familyType: toTrimmedString(payload.familyType, 30)
   };
 };
 

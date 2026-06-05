@@ -14,26 +14,20 @@ root.render(
       <AuthProvider>
         <App />
         <Toaster
-          position="top-right"
+          position="top-center"
           toastOptions={{
             style: {
-              borderRadius: "18px",
-              border: "1px solid rgba(59, 74, 58, 0.12)",
-              background: "rgba(255, 253, 249, 0.95)",
-              color: "#2f392f",
-              boxShadow: "0 18px 40px rgba(38, 49, 37, 0.14)"
+              borderRadius: "16px",
+              border: "1px solid rgba(124, 45, 18, 0.12)",
+              background: "rgba(255, 253, 249, 0.97)",
+              color: "#1c1917",
+              boxShadow: "0 8px 28px rgba(0,0,0,0.11)"
             },
             success: {
-              iconTheme: {
-                primary: "#3b4a3a",
-                secondary: "#f0ede6"
-              }
+              iconTheme: { primary: "#7c2d12", secondary: "#fef3ee" }
             },
             error: {
-              iconTheme: {
-                primary: "#b88968",
-                secondary: "#fffdf9"
-              }
+              iconTheme: { primary: "#dc2626", secondary: "#fff1f0" }
             }
           }}
         />

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import api from "../utils/axios";
 import { useAuth } from "../context/AuthContext";
@@ -7,7 +7,17 @@ import { useAuth } from "../context/AuthContext";
 const ViewProfile = () => {
   const { id } = useParams();
   const { user, refreshUser } = useAuth();
+  const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
+
+  // Gate: unpaid users cannot view other people's full profiles.
+  // Own profile is always accessible regardless of isPaid.
+  const isOwnProfile = user?._id?.toString() === id?.toString();
+  useEffect(() => {
+    if (user && !user.isPaid && !isOwnProfile) {
+      navigate("/membership", { replace: true });
+    }
+  }, [user, isOwnProfile, navigate]);
 
   useEffect(() => {
     api

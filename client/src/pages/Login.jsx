@@ -23,8 +23,22 @@ const Login = () => {
 
     try {
       setSubmitting(true);
-      await login({ email, password });
-      toast.success("Welcome back!");
+      const data = await login({ email, password });
+      const firstName = data?.user?.fullName?.split(" ")?.[0] || "";
+
+      // One-time welcome popup — shows only here, never on page reload
+      toast.custom((t) => (
+        <div className={`welcome-toast${t.visible ? " welcome-toast--in" : " welcome-toast--out"}`}>
+          <span className="welcome-toast-emoji">🙏</span>
+          <div>
+            <p className="welcome-toast-title">
+              {firstName ? `Namaste, ${firstName}!` : "Welcome back!"}
+            </p>
+            <p className="welcome-toast-sub">Welcome back to PremSetu</p>
+          </div>
+        </div>
+      ), { duration: 3500 });
+
       navigate("/dashboard");
     } catch (err) {
       const msg = err.response?.data?.message || "Login failed. Please check your email and password.";

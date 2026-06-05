@@ -6,3 +6,8 @@ server/.env
 client/.env
 .DS_Store
 npm-debug.log*
+
+# Dev logs / build artifacts
+*.log
+client/client-dev.log
+server/server-boot.log

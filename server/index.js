@@ -12,6 +12,7 @@ const authRoutes = require("./routes/auth");
 const profileRoutes = require("./routes/profile");
 const matchRoutes = require("./routes/matches");
 const chatRoutes = require("./routes/chat");
+const paymentRoutes = require("./routes/payment");
 const { connectDatabase, stopDatabase } = require("./config/database");
 const { seedDemoData } = require("./config/seedDemoData");
 const { isOriginAllowed, runtimeConfig, validateRuntimeConfig } = require("./config/runtime");
@@ -112,6 +113,7 @@ app.use("/api/auth", authLimiter, authRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/matches", matchRoutes);
 app.use("/api/chat", chatRoutes);
+app.use("/api/payment", paymentRoutes);
 
 app.use((_req, res) => {
   return res.status(404).json({ message: "Route not found." });

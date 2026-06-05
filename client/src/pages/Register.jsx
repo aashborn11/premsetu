@@ -75,8 +75,8 @@ const Register = () => {
       setSubmitting(true);
       const dateOfBirth = `${dobYear}-${dobMonth}-${dobDay}`;
       await login({ ...form, dateOfBirth }, "/auth/register");
-      toast.success("Account created! Welcome to PremSetu.");
-      navigate("/dashboard");
+      toast.success("Account created! Let's complete your profile.");
+      navigate("/edit-profile");
     } catch (err) {
       const msg = err.response?.data?.message || "Registration failed. Please try again.";
       setError(msg);

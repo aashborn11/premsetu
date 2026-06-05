@@ -1,37 +1,46 @@
 import { Link } from "react-router-dom";
+import { LogoA } from "./Logo";
 
 const Footer = () => (
   <footer className="site-footer">
+
+    {/* Brand */}
     <div className="footer-card footer-brand">
-      <h3>PremSetu</h3>
+      <LogoA height={28} />
       <p>
-        A calm, family-friendly matrimonial space for thoughtful introductions, detailed profiles, and private
-        conversations that move at the right pace.
+        Trusted matchmaking for families across India. Detailed profiles,
+        family-first values, and private conversations that move at a
+        respectful pace — for every community, every background.
       </p>
       <div className="footer-chip-row">
-        <span className="chip">Made for Indian matchmaking</span>
-        <span className="chip">Simple English, warm guidance</span>
+        <span className="chip">All Communities</span>
+        <span className="chip">Trusted Matchmaking</span>
+        <span className="chip">Family-first</span>
       </div>
-      <p className="support-line">English main, thoda sa warm Hinglish touch for ease and clarity.</p>
     </div>
 
+    {/* Quick links */}
     <div className="footer-card footer-column">
-      <h4>Explore</h4>
+      <h4>Quick Links</h4>
       <div className="footer-link-list">
         <a href="/#how-it-works">How It Works</a>
         <a href="/#success-stories">Success Stories</a>
-        <a href="/#culture-fit">Indian Family Fit</a>
+        <Link to="/register">Create Profile</Link>
+        <Link to="/login">Login</Link>
       </div>
     </div>
 
+    {/* Trust & Safety */}
     <div className="footer-card footer-column">
-      <h4>Inside PremSetu</h4>
+      <h4>Trust &amp; Safety</h4>
       <div className="footer-link-list">
-        <Link to="/register">Create Profile</Link>
-        <Link to="/matches">Browse Matches</Link>
-        <Link to="/profile">My Profile</Link>
+        <Link to="/privacy">Privacy Policy</Link>
+        <Link to="/terms">Terms &amp; Conditions</Link>
+        <Link to="/refund">Refund Policy</Link>
+        <Link to="/contact">Contact Us</Link>
       </div>
     </div>
+
   </footer>
 );
 

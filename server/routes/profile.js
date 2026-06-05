@@ -2,10 +2,12 @@ const express = require("express");
 const multer = require("multer");
 const mongoose = require("mongoose");
 const authMiddleware = require("../middleware/authMiddleware");
+const optionalAuth = require("../middleware/optionalAuth");
 const User = require("../models/User");
 const { cloudinary, isCloudinaryConfigured } = require("../config/cloudinary");
 const { runtimeConfig } = require("../config/runtime");
 const { validateProfileUpdate } = require("../utils/validation");
+const { toPublicProfile } = require("../utils/profileGate");
 
 const router = express.Router();
 const upload = multer({
@@ -45,7 +47,15 @@ const PROFILE_FIELDS = [
   "annualIncome",
   "height",
   "maritalStatus",
-  "bio"
+  "bio",
+  "diet",
+  "familyType",
+  "familyValues",
+  "parentsOccupation",
+  "siblings",
+  "manglikStatus",
+  "birthTime",
+  "birthPlace"
 ];
 
 const calculateCompletion = (user) => {
@@ -204,18 +214,32 @@ router.post(
   }
 );
 
-router.get("/:id", authMiddleware, async (req, res) => {
+router.get("/:id", optionalAuth, async (req, res) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
       return res.status(400).json({ message: "Invalid profile id." });
     }
 
-    const user = await User.findById(req.params.id).select("-password");
-    if (!user) {
+    const profileUser = await User.findById(req.params.id).select("-password");
+    if (!profileUser) {
       return res.status(404).json({ message: "Profile not found." });
     }
 
-    return res.json({ user });
+    // Own profile — always full regardless of isPaid
+    if (req.userId && req.userId.toString() === req.params.id.toString()) {
+      return res.json({ user: profileUser });
+    }
+
+    // Paid user — full profile
+    if (req.userId) {
+      const requester = await User.findById(req.userId).select("isPaid");
+      if (requester && requester.isPaid) {
+        return res.json({ user: profileUser });
+      }
+    }
+
+    // Not logged in or unpaid — public fields only
+    return res.json({ user: toPublicProfile(profileUser) });
   } catch (error) {
     return res.status(500).json({ message: "Could not fetch profile." });
   }

@@ -15,7 +15,9 @@ const calculateAge = (dateOfBirth) => {
 };
 
 const ProfileCard = ({ profile, onInterest, actionLabel = "Send Interest", actionDisabled = false }) => {
-  const age = calculateAge(profile.dateOfBirth);
+  // Paid users: full profile has dateOfBirth — compute age from it.
+  // Unpaid / teaser: stripped profile has age (number) pre-computed by the backend.
+  const age = typeof profile.age === "number" ? profile.age : calculateAge(profile.dateOfBirth);
 
   return (
     <article className="profile-card">

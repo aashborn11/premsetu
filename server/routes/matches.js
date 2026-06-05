@@ -1,20 +1,41 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const authMiddleware = require("../middleware/authMiddleware");
+const optionalAuth = require("../middleware/optionalAuth");
 const User = require("../models/User");
 const { escapeRegex, sanitizeSuggestionFilters } = require("../utils/validation");
+const { toPublicProfile } = require("../utils/profileGate");
 
 const router = express.Router();
 
-router.get("/suggestions", authMiddleware, async (req, res) => {
+router.get("/suggestions", optionalAuth, async (req, res) => {
   try {
-    const { page, limit, religion, state, city, education, profession, minAge, maxAge } =
-      sanitizeSuggestionFilters(req.query);
+    // ── TIER 1: No auth — public teaser (home page preview) ───────────────
+    // Returns max 6 random complete profiles with public fields only.
+    // No gender filter, no exclusions, no search filters applied.
+    if (!req.userId) {
+      const teaserProfiles = await User.aggregate([
+        { $match: { isProfileComplete: true } },
+        { $sample: { size: 6 } },
+        { $project: { password: 0 } }
+      ]);
+      return res.json({
+        users: teaserProfiles.map(toPublicProfile),
+        pagination: { total: teaserProfiles.length, page: 1, pages: 1 }
+      });
+    }
 
+    // ── TIER 2 & 3: Authenticated — load user to check isPaid ─────────────
     const currentUser = await User.findById(req.userId);
     if (!currentUser) {
       return res.status(404).json({ message: "User not found." });
     }
+
+    const {
+      page, limit, minAge, maxAge,
+      religion, caste, state, city, education, profession,
+      motherTongue, maritalStatus, diet, manglikStatus, familyType
+    } = sanitizeSuggestionFilters(req.query);
 
     const excludedUserIds = [
       currentUser._id,
@@ -29,11 +50,21 @@ router.get("/suggestions", authMiddleware, async (req, res) => {
 
     if (currentUser.gender === "male") query.gender = "female";
     if (currentUser.gender === "female") query.gender = "male";
+
+    // Free-text fields — substring regex (intended for partial matching)
     if (religion) query.religion = new RegExp(escapeRegex(religion), "i");
+    if (caste) query.caste = new RegExp(escapeRegex(caste), "i");
     if (state) query.state = new RegExp(escapeRegex(state), "i");
     if (city) query.city = new RegExp(escapeRegex(city), "i");
     if (education) query.education = new RegExp(escapeRegex(education), "i");
     if (profession) query.profession = new RegExp(escapeRegex(profession), "i");
+
+    // Controlled-vocabulary fields — exact case-insensitive match only
+    if (motherTongue) query.motherTongue = new RegExp(`^${escapeRegex(motherTongue)}$`, "i");
+    if (maritalStatus) query.maritalStatus = new RegExp(`^${escapeRegex(maritalStatus)}$`, "i");
+    if (diet) query.diet = new RegExp(`^${escapeRegex(diet)}$`, "i");
+    if (manglikStatus) query.manglikStatus = new RegExp(`^${escapeRegex(manglikStatus)}$`, "i");
+    if (familyType) query.familyType = new RegExp(`^${escapeRegex(familyType)}$`, "i");
 
     if (minAge || maxAge) {
       const today = new Date();
@@ -56,13 +87,21 @@ router.get("/suggestions", authMiddleware, async (req, res) => {
       User.countDocuments(query)
     ]);
 
+    const pagination = {
+      total,
+      page: pageNumber,
+      pages: Math.ceil(total / pageLimit) || 1
+    };
+
+    // ── TIER 3: Paid user — full profiles ─────────────────────────────────
+    if (currentUser.isPaid) {
+      return res.json({ users, pagination });
+    }
+
+    // ── TIER 2: Authenticated but unpaid — public fields only ─────────────
     return res.json({
-      users,
-      pagination: {
-        total,
-        page: pageNumber,
-        pages: Math.ceil(total / pageLimit) || 1
-      }
+      users: users.map(toPublicProfile),
+      pagination
     });
   } catch (error) {
     return res.status(500).json({ message: "Could not fetch suggestions." });

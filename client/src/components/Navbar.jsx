@@ -3,33 +3,29 @@ import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import api from "../utils/axios";
 import { getSocket } from "../utils/socket";
+import { LogoA } from "./Logo";
+import { CHAT_ENABLED } from "../config";
 
 const Navbar = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen]     = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const { user, logout } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
+  const navigate  = useNavigate();
+  const location  = useLocation();
 
-  useEffect(() => {
-    setMenuOpen(false);
-  }, [location.pathname]);
+  /* Close mobile menu on route change */
+  useEffect(() => { setMenuOpen(false); }, [location.pathname]);
 
+  /* Fetch unread count + live socket updates — skipped when chat is disabled */
   useEffect(() => {
-    if (!user) {
-      setUnreadCount(0);
-      return undefined;
-    }
+    if (!CHAT_ENABLED || !user) { setUnreadCount(0); return undefined; }
 
     const fetchUnread = async () => {
       try {
         const { data } = await api.get("/chat/unread-count");
         setUnreadCount(data.count || 0);
-      } catch {
-        // silently ignore
-      }
+      } catch { /* silently ignore */ }
     };
-
     fetchUnread();
 
     const socket = getSocket();
@@ -40,93 +36,84 @@ const Navbar = () => {
         setUnreadCount((prev) => prev + 1);
       }
     };
-
     socket.on("chat:new-message", handleNewMessage);
     return () => socket.off("chat:new-message", handleNewMessage);
   }, [user, location.pathname]);
 
+  /* Clear badge when inside chat */
   useEffect(() => {
-    if (location.pathname.startsWith("/chat/")) {
-      setUnreadCount(0);
-    }
+    if (CHAT_ENABLED && location.pathname.startsWith("/chat/")) setUnreadCount(0);
   }, [location.pathname]);
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
-
-  const firstName = user?.fullName?.split(" ")?.[0] || "Member";
-
-  const navClassName = ({ isActive }) => `nav-link${isActive ? " active" : ""}`;
+  const handleLogout = () => { logout(); navigate("/login"); };
+  const navCls = ({ isActive }) => `nav-link${isActive ? " active" : ""}`;
 
   return (
     <header className="navbar-shell">
       <nav className="navbar">
+
+        {/* ── Logo ── */}
         <Link to="/" className="brand-mark">
-          <span className="brand-icon">PS</span>
-          <span className="brand-copy">
-            <strong>PremSetu</strong>
-            <small>Thoughtful matchmaking for modern Indian families</small>
-          </span>
+          <LogoA height={34} />
         </Link>
 
-        <button type="button" className="menu-toggle" onClick={() => setMenuOpen((value) => !value)}>
-          {menuOpen ? "Close" : "Menu"}
+        {/* ── Mobile hamburger ── */}
+        <button
+          type="button"
+          className="menu-toggle"
+          onClick={() => setMenuOpen((v) => !v)}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+        >
+          {menuOpen ? "✕" : "☰"}
         </button>
 
+        {/* ── Nav groups ── */}
         <div className={`nav-links ${menuOpen ? "open" : ""}`}>
-          <NavLink to="/" className={navClassName}>
-            Home
-          </NavLink>
-          {user ? (
-            <>
-              <span className="nav-user-chip">Namaste, {firstName}</span>
-              <NavLink to="/dashboard" className={navClassName}>
-                Dashboard
-              </NavLink>
-              <NavLink to="/matches" className={navClassName}>
-                Matches
-              </NavLink>
-              <NavLink to="/chat-list" className={navClassName} style={{ position: "relative" }}>
-                Messages
-                {unreadCount > 0 && (
-                  <span style={{
-                    position: "absolute",
-                    top: 2,
-                    right: 2,
-                    minWidth: 18,
-                    height: 18,
-                    borderRadius: "999px",
-                    background: "var(--clay)",
-                    color: "#fff",
-                    fontSize: "0.68rem",
-                    fontWeight: 800,
-                    display: "grid",
-                    placeItems: "center",
-                    padding: "0 4px"
-                  }}>
-                    {unreadCount > 9 ? "9+" : unreadCount}
-                  </span>
+
+          {/* PRIMARY NAV — left group */}
+          <div className="nav-primary">
+            <NavLink to="/" className={navCls}>Home</NavLink>
+            {/* Browse Profiles visible to everyone — PaidRoute on the route handles gating */}
+            <NavLink to="/matches" className={navCls}>Browse Profiles</NavLink>
+            {user && (
+              <>
+                {CHAT_ENABLED && (
+                  <NavLink
+                    to="/chat-list"
+                    className={navCls}
+                    style={{ position: "relative" }}
+                  >
+                    Messages
+                    {unreadCount > 0 && (
+                      <span className="nav-badge">
+                        {unreadCount > 9 ? "9+" : unreadCount}
+                      </span>
+                    )}
+                  </NavLink>
                 )}
-              </NavLink>
-              <NavLink to="/profile" className={navClassName}>
-                My Profile
-              </NavLink>
-              <button type="button" className="ghost-button" onClick={handleLogout}>
-                Logout
-              </button>
-            </>
-          ) : (
-            <>
-              <NavLink to="/login" className={navClassName}>
-                Login
-              </NavLink>
-              <NavLink to="/register" className="primary-button small">
-                Register
-              </NavLink>
-            </>
-          )}
+                {/* Dashboard is always last */}
+                <NavLink to="/dashboard" className={navCls}>Dashboard</NavLink>
+              </>
+            )}
+          </div>
+
+          {/* USER / AUTH GROUP — right */}
+          <div className="nav-user-group">
+            {user ? (
+              <>
+                <NavLink to="/profile" className={navCls}>My Profile</NavLink>
+                <button type="button" className="nav-link" onClick={handleLogout}>
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <NavLink to="/login"    className={navCls}>Login</NavLink>
+                <NavLink to="/register" className="primary-button small">Register</NavLink>
+              </>
+            )}
+          </div>
+
         </div>
       </nav>
     </header>

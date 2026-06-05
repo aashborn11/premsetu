@@ -84,7 +84,47 @@ const userSchema = new mongoose.Schema(
     },
     maritalStatus: {
       type: String,
-      enum: ["never married", "divorced", "widowed", ""],
+      enum: ["never married", "divorced", "widowed", "awaiting divorce", ""],
+      default: ""
+    },
+    diet: {
+      type: String,
+      enum: ["veg", "non-veg", "eggetarian", "vegan", ""],
+      default: ""
+    },
+    familyType: {
+      type: String,
+      enum: ["nuclear", "joint", ""],
+      default: ""
+    },
+    familyValues: {
+      type: String,
+      enum: ["traditional", "moderate", "liberal", ""],
+      default: ""
+    },
+    parentsOccupation: {
+      type: String,
+      trim: true,
+      default: ""
+    },
+    siblings: {
+      type: String,
+      trim: true,
+      default: ""
+    },
+    manglikStatus: {
+      type: String,
+      enum: ["manglik", "non-manglik", "dont know", ""],
+      default: ""
+    },
+    birthTime: {
+      type: String,
+      trim: true,
+      default: ""
+    },
+    birthPlace: {
+      type: String,
+      trim: true,
       default: ""
     },
     bio: {
@@ -101,6 +141,10 @@ const userSchema = new mongoose.Schema(
       default: []
     },
     isProfileComplete: {
+      type: Boolean,
+      default: false
+    },
+    isPaid: {
       type: Boolean,
       default: false
     },

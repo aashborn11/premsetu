@@ -5,22 +5,106 @@ import ProfileCard from "../components/ProfileCard";
 
 const initialFilters = {
   religion: "",
+  maritalStatus: "",
+  minAge: "21",
+  maxAge: "35",
   state: "",
+  caste: "",
+  motherTongue: "",
+  diet: "",
+  manglikStatus: "",
+  familyType: "",
   city: "",
   education: "",
-  profession: "",
-  minAge: "21",
-  maxAge: "35"
+  profession: ""
 };
 
-const filterFields = [
-  { key: "religion", label: "Religion", hint: "Leave blank for open search" },
-  { key: "state", label: "State", hint: "Useful for location-first search" },
-  { key: "city", label: "City", hint: "Optional but helpful" },
-  { key: "education", label: "Education", hint: "Use broad terms first" },
-  { key: "profession", label: "Profession", hint: "Short terms work best" },
-  { key: "minAge", label: "Minimum Age", hint: "Start with a wider range" },
-  { key: "maxAge", label: "Maximum Age", hint: "Then narrow slowly" }
+// Always-visible filters
+const primaryFilterDefs = [
+  { key: "religion", label: "Religion", type: "text", hint: "Leave blank for any" },
+  {
+    key: "maritalStatus",
+    label: "Marital Status",
+    type: "select",
+    options: [
+      { value: "", label: "Any" },
+      { value: "never married", label: "Never Married" },
+      { value: "divorced", label: "Divorced" },
+      { value: "widowed", label: "Widowed" },
+      { value: "awaiting divorce", label: "Awaiting Divorce" }
+    ]
+  },
+  { key: "minAge", label: "Min Age", type: "text", hint: "Min: 18" },
+  { key: "maxAge", label: "Max Age", type: "text", hint: "Max: 80" },
+  { key: "state", label: "State", type: "text" }
+];
+
+// Collapsible extra filters
+const moreFilterDefs = [
+  { key: "caste", label: "Caste / Community", type: "text" },
+  {
+    key: "motherTongue",
+    label: "Mother Tongue",
+    type: "select",
+    options: [
+      { value: "", label: "Any" },
+      { value: "Hindi", label: "Hindi" },
+      { value: "Bengali", label: "Bengali" },
+      { value: "Telugu", label: "Telugu" },
+      { value: "Marathi", label: "Marathi" },
+      { value: "Tamil", label: "Tamil" },
+      { value: "Gujarati", label: "Gujarati" },
+      { value: "Kannada", label: "Kannada" },
+      { value: "Malayalam", label: "Malayalam" },
+      { value: "Punjabi", label: "Punjabi" },
+      { value: "Odia", label: "Odia" },
+      { value: "Assamese", label: "Assamese" },
+      { value: "Urdu", label: "Urdu" },
+      { value: "Maithili", label: "Maithili" },
+      { value: "Bhojpuri", label: "Bhojpuri" },
+      { value: "Rajasthani", label: "Rajasthani" },
+      { value: "Sindhi", label: "Sindhi" },
+      { value: "Tulu", label: "Tulu" },
+      { value: "Konkani", label: "Konkani" },
+      { value: "Nepali", label: "Nepali" }
+    ]
+  },
+  {
+    key: "diet",
+    label: "Diet",
+    type: "select",
+    options: [
+      { value: "", label: "Any" },
+      { value: "veg", label: "Vegetarian" },
+      { value: "non-veg", label: "Non-Vegetarian" },
+      { value: "eggetarian", label: "Eggetarian" },
+      { value: "vegan", label: "Vegan" }
+    ]
+  },
+  {
+    key: "manglikStatus",
+    label: "Manglik Status",
+    type: "select",
+    options: [
+      { value: "", label: "Any" },
+      { value: "manglik", label: "Manglik" },
+      { value: "non-manglik", label: "Non-Manglik" },
+      { value: "dont know", label: "Don't Know" }
+    ]
+  },
+  {
+    key: "familyType",
+    label: "Family Type",
+    type: "select",
+    options: [
+      { value: "", label: "Any" },
+      { value: "nuclear", label: "Nuclear Family" },
+      { value: "joint", label: "Joint Family" }
+    ]
+  },
+  { key: "city", label: "City", type: "text" },
+  { key: "education", label: "Education", type: "text" },
+  { key: "profession", label: "Profession", type: "text" }
 ];
 
 const Matches = () => {
@@ -30,6 +114,9 @@ const Matches = () => {
   const [pagination, setPagination] = useState({ page: 1, pages: 1, total: 0 });
   const [loading, setLoading] = useState(true);
   const [interestingIds, setInterestingIds] = useState(new Set());
+  const [showMoreFilters, setShowMoreFilters] = useState(false);
+
+  const activeMoreCount = moreFilterDefs.filter((f) => filters[f.key]).length;
 
   const fetchProfiles = async (selectedPage = page, selectedFilters = filters) => {
     setLoading(true);
@@ -79,8 +166,41 @@ const Matches = () => {
 
   const handleReset = async () => {
     setFilters(initialFilters);
+    setShowMoreFilters(false);
     setPage(1);
     await fetchProfiles(1, initialFilters);
+  };
+
+  const renderField = (field) => {
+    if (field.type === "select") {
+      return (
+        <label key={field.key} className="field-stack">
+          <span>{field.label}</span>
+          <select
+            value={filters[field.key]}
+            onChange={(e) => setFilters({ ...filters, [field.key]: e.target.value })}
+          >
+            {field.options.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        </label>
+      );
+    }
+
+    return (
+      <label key={field.key} className="field-stack">
+        <span>{field.label}</span>
+        {field.hint && <small>{field.hint}</small>}
+        <input
+          placeholder={field.label}
+          value={filters[field.key]}
+          onChange={(e) => setFilters({ ...filters, [field.key]: e.target.value })}
+        />
+      </label>
+    );
   };
 
   return (
@@ -91,7 +211,7 @@ const Matches = () => {
             <span>Find Matches</span>
             <h1>Search for someone who genuinely fits your life and values.</h1>
             <p className="section-copy">
-              Use filters thoughtfully. Bahut zyada narrow mat karo in the first try, let good profiles appear first.
+              Use filters thoughtfully. Don't narrow too much on the first try — let good profiles appear first.
             </p>
           </div>
           <span className="status-pill">{pagination.total} profiles found</span>
@@ -105,21 +225,28 @@ const Matches = () => {
         </div>
 
         <div className="filter-grid">
-          {filterFields.map((field) => (
-            <label key={field.key} className="field-stack">
-              <span>{field.label}</span>
-              <small>{field.hint}</small>
-              <input
-                placeholder={field.label}
-                value={filters[field.key]}
-                onChange={(event) => setFilters({ ...filters, [field.key]: event.target.value })}
-              />
-            </label>
-          ))}
+          {primaryFilterDefs.map(renderField)}
         </div>
 
+        <button
+          type="button"
+          className="filter-more-toggle"
+          onClick={() => setShowMoreFilters((v) => !v)}
+        >
+          {showMoreFilters ? "− Hide filters" : "+ More filters"}
+          {activeMoreCount > 0 && !showMoreFilters && (
+            <span className="nav-badge">{activeMoreCount}</span>
+          )}
+        </button>
+
+        {showMoreFilters && (
+          <div className="filter-grid filter-more-section">
+            {moreFilterDefs.map(renderField)}
+          </div>
+        )}
+
         <div className="helper-ribbon">
-          Tip: start broad with age and state, then narrow by education or profession only if needed.
+          Tip: start broad with age and religion, then add diet or marital status only if it matters to you.
         </div>
 
         <div className="filter-actions">

@@ -5,6 +5,7 @@ import api from "../utils/axios";
 import { useAuth } from "../context/AuthContext";
 import ProfileCard from "../components/ProfileCard";
 import MatchCard from "../components/MatchCard";
+import { Mandala } from "../components/Festive";
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -65,26 +66,26 @@ const Dashboard = () => {
 
   const dashboardTip = useMemo(() => {
     if (completion < 50) {
-      return "Acha first step: profile details complete karo. Better profile usually means better replies.";
+      return "Complete your profile details first. A fuller profile gets better replies.";
     }
     if (!user?.profilePhoto) {
-      return "Add a profile photo next. Trusted profiles usually get more serious interest.";
+      return "Add a profile photo next. Profiles with photos get more interest.";
     }
     if (!stats.sent) {
-      return "Start with one or two thoughtful interests. Quality over quantity works better here.";
+      return "Send a couple of thoughtful interests. Quality beats quantity here.";
     }
-    return "You are in a good place now. Keep your profile updated and reply with warmth when a promising match appears.";
+    return "You're all set. Keep your profile fresh and reply warmly to good matches.";
   }, [completion, stats.sent, user?.profilePhoto]);
 
   return (
     <section className="page-shell">
       <div className="dashboard-hero">
         <div className="dashboard-hero-card">
-          <span className="eyebrow">Your dashboard</span>
+          <Mandala className="dashboard-hero-mandala" />
+          <span className="eyebrow">🪔 Your Dashboard</span>
           <h1>Namaste, {firstName}</h1>
           <p className="support-copy">
-            Track your profile, review incoming interest, and keep your search calm and intentional. Clear profile,
-            clear conversations.
+            Track your profile and respond to interests — all in one place.
           </p>
           <div className="dashboard-actions">
             <Link className="primary-button" to="/edit-profile">
@@ -95,16 +96,16 @@ const Dashboard = () => {
             </Link>
           </div>
           <div className="dashboard-tags">
-            <span className="badge">Private match-based chat</span>
+            <span className="badge">Verified community</span>
             <span className="badge">Made for serious intent</span>
           </div>
         </div>
 
         <aside className="dashboard-side-panel">
           <div>
-            <span className="eyebrow">Profile health</span>
+            <span className="eyebrow">Profile Strength</span>
             <h3>{completion}% complete</h3>
-            <p className="muted-copy">The more complete your profile, the easier it becomes for families to trust it.</p>
+            <p className="muted-copy">A complete profile earns more trust.</p>
           </div>
           <div className="progress-bar">
             <div style={{ width: `${completion}%` }} />
@@ -135,7 +136,7 @@ const Dashboard = () => {
       <div className="section-heading inline-heading">
         <div>
           <span>Suggested Profiles</span>
-          <h2>Profiles selected for you</h2>
+          <h2>Picked for you</h2>
         </div>
         <Link to="/matches">See all</Link>
       </div>
@@ -143,7 +144,7 @@ const Dashboard = () => {
       {loading ? (
         <div className="empty-state">Loading suggestions...</div>
       ) : suggestions.length ? (
-        <div className="cards-grid">
+        <div className="cards-grid fest-stagger">
           {suggestions.map((profile) => (
             <ProfileCard
               key={profile._id}
@@ -155,13 +156,13 @@ const Dashboard = () => {
           ))}
         </div>
       ) : (
-        <div className="empty-state">No new suggestions right now. Check back after completing your profile.</div>
+        <div className="empty-state">No new suggestions yet. Complete your profile to see more.</div>
       )}
 
       <div className="section-heading inline-heading">
         <div>
           <span>Recent Activity</span>
-          <h2>Your connected matches</h2>
+          <h2>Your matches</h2>
         </div>
       </div>
 
@@ -175,7 +176,7 @@ const Dashboard = () => {
         </div>
       ) : (
         <div className="empty-state">
-          No mutual matches yet. Keep your profile honest, warm, and detailed. The right people usually respond to that.
+          No mutual matches yet. Keep your profile complete and warm — the right people respond to that.
         </div>
       )}
     </section>
