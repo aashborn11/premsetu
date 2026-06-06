@@ -8,6 +8,7 @@ import { CHAT_ENABLED } from "../config";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen]     = useState(false);
+  const [scrolled, setScrolled]     = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const { user, logout } = useAuth();
   const navigate  = useNavigate();
@@ -15,6 +16,14 @@ const Navbar = () => {
 
   /* Close mobile menu on route change */
   useEffect(() => { setMenuOpen(false); }, [location.pathname]);
+
+  /* Elevate navbar once the page is scrolled */
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   /* Fetch unread count + live socket updates — skipped when chat is disabled */
   useEffect(() => {
@@ -50,7 +59,7 @@ const Navbar = () => {
 
   return (
     <header className="navbar-shell">
-      <nav className="navbar">
+      <nav className={`navbar${scrolled ? " scrolled" : ""}`}>
 
         {/* ── Logo ── */}
         <Link to="/" className="brand-mark">

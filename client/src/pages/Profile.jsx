@@ -18,7 +18,7 @@ const Profile = () => {
         <div className="profile-main">
           <div className="profile-photo-frame">
             <img
-              src={user?.profilePhoto || "https://placehold.co/320x360/F0EDE6/3B4A3A?text=PremSetu"}
+              src={user?.profilePhoto || "https://placehold.co/320x360/fdeef4/c2185b?text=PremSetu"}
               alt={user?.fullName}
             />
           </div>

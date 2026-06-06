@@ -23,7 +23,7 @@ const ProfileCard = ({ profile, onInterest, actionLabel = "Send Interest", actio
     <article className="profile-card">
       <div className="profile-card-media">
         <img
-          src={profile.profilePhoto || "https://placehold.co/700x880/F0EDE6/3B4A3A?text=PremSetu"}
+          src={profile.profilePhoto || "https://placehold.co/700x880/fdeef4/c2185b?text=PremSetu"}
           alt={profile.fullName}
         />
         <span className="profile-card-badge">{profile.isProfileComplete ? "Profile complete" : "New profile"}</span>

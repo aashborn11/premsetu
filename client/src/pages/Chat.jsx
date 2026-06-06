@@ -93,7 +93,7 @@ const Chat = () => {
         <aside className="chat-side-panel">
           <div className="chat-avatar-frame">
             <img
-              src={otherUser?.profilePhoto || "https://placehold.co/200x200/F0EDE6/3B4A3A?text=PS"}
+              src={otherUser?.profilePhoto || "https://placehold.co/200x200/fdeef4/c2185b?text=PS"}
               alt={otherUser?.fullName}
             />
           </div>
@@ -113,7 +113,7 @@ const Chat = () => {
           <div className="chat-header">
             <div className="chat-avatar-frame">
               <img
-                src={otherUser?.profilePhoto || "https://placehold.co/200x200/F0EDE6/3B4A3A?text=PS"}
+                src={otherUser?.profilePhoto || "https://placehold.co/200x200/fdeef4/c2185b?text=PS"}
                 alt={otherUser?.fullName}
               />
             </div>

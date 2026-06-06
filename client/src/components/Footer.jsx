@@ -6,25 +6,22 @@ const Footer = () => (
 
     {/* Brand */}
     <div className="footer-card footer-brand">
-      <LogoA height={28} />
-      <p>
-        Trusted matchmaking for families across India. Detailed profiles,
-        family-first values, and private conversations that move at a
-        respectful pace — for every community, every background.
-      </p>
+      <LogoA height={30} />
+      <p>Trusted matchmaking for every community across India.</p>
+      <p className="footer-tagline-hi">रिश्ता नहीं, जीवन का सेतु</p>
       <div className="footer-chip-row">
         <span className="chip">All Communities</span>
-        <span className="chip">Trusted Matchmaking</span>
         <span className="chip">Family-first</span>
+        <span className="chip">Privacy-first</span>
       </div>
     </div>
 
-    {/* Quick links */}
+    {/* Explore */}
     <div className="footer-card footer-column">
-      <h4>Quick Links</h4>
+      <h4>Explore</h4>
       <div className="footer-link-list">
         <a href="/#how-it-works">How It Works</a>
-        <a href="/#success-stories">Success Stories</a>
+        <Link to="/matches">Browse Profiles</Link>
         <Link to="/register">Create Profile</Link>
         <Link to="/login">Login</Link>
       </div>
@@ -39,6 +36,13 @@ const Footer = () => (
         <Link to="/refund">Refund Policy</Link>
         <Link to="/contact">Contact Us</Link>
       </div>
+    </div>
+
+    {/* Bottom bar — spans full width */}
+    <div className="footer-bottom">
+      <span>© {new Date().getFullYear()} PremSetu. All rights reserved.</span>
+      <span className="footer-bottom-mid">Made with <span className="footer-heart">♥</span> in India 🇮🇳</span>
+      <span>🔒 Secure payments by Razorpay</span>
     </div>
 
   </footer>

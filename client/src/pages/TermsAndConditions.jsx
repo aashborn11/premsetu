@@ -1,7 +1,7 @@
 // TEMPLATE — Must be reviewed and approved by a qualified Indian lawyer
 // before going live. Replace all placeholders with real business details.
 
-import PolicyShell, { PolicySection, PH } from "../components/PolicyShell";
+import PolicyShell, { PolicySection } from "../components/PolicyShell";
 
 const TermsAndConditions = () => (
   <PolicyShell
@@ -13,9 +13,9 @@ const TermsAndConditions = () => (
       <p>
         PremSetu ("<strong>Platform</strong>", "<strong>we</strong>", "
         <strong>us</strong>", "<strong>our</strong>") is an online matrimonial
-        service operated by <PH>[LEGAL ENTITY NAME]</PH>, a company
-        incorporated under the laws of India, with its registered office at{" "}
-        <PH>[REGISTERED ADDRESS]</PH>.
+        service operated by Karmveer Singh — a sole proprietor based in India
+        (the business is not yet incorporated as a company) — operating from{" "}
+        D-5, Teachers Colony, Shradhapuri Phase 2, Meerut, Uttar Pradesh – 250001.
       </p>
       <p>
         PremSetu provides a digital platform to help individuals from all
@@ -161,7 +161,7 @@ const TermsAndConditions = () => (
       <p>
         All content on this Platform — including the PremSetu name, logo,
         design, software, and text — is the property of{" "}
-        <PH>[LEGAL ENTITY NAME]</PH> and is protected by applicable Indian
+        Karmveer Singh (Proprietor, PremSetu) and is protected by applicable Indian
         and international intellectual property laws.
       </p>
       <p>
@@ -184,7 +184,7 @@ const TermsAndConditions = () => (
 
     <PolicySection title="10. Limitation of Liability">
       <p>
-        To the maximum extent permitted by law, <PH>[LEGAL ENTITY NAME]</PH>{" "}
+        To the maximum extent permitted by law, Karmveer Singh (Proprietor, PremSetu){" "}
         shall not be liable for any indirect, incidental, consequential, or
         punitive damages arising from your use of or inability to use the
         Platform, or from any interaction with another user whether on or off
@@ -202,7 +202,7 @@ const TermsAndConditions = () => (
         We may suspend or terminate your account at any time if we believe
         you have violated these Terms, without prior notice. You may also
         delete your account at any time by contacting us at{" "}
-        <PH>[SUPPORT EMAIL]</PH>.
+        officialpremsetu@gmail.com.
       </p>
       <p>
         Upon termination, your right to use the Platform ceases immediately.
@@ -215,7 +215,7 @@ const TermsAndConditions = () => (
         These Terms shall be governed by and construed in accordance with the
         laws of India. Any disputes arising out of these Terms shall be
         subject to the exclusive jurisdiction of the courts at{" "}
-        <PH>[JURISDICTION — e.g., New Delhi / Mumbai / Jaipur]</PH>.
+        Meerut, Uttar Pradesh.
       </p>
     </PolicySection>
 
@@ -233,13 +233,13 @@ const TermsAndConditions = () => (
         For questions about these Terms, please contact us at:
       </p>
       <p>
-        <strong><PH>[LEGAL ENTITY NAME]</PH></strong>
+        <strong>Karmveer Singh (Proprietor, PremSetu)</strong>
         <br />
-        <PH>[REGISTERED ADDRESS]</PH>
+        D-5, Teachers Colony, Shradhapuri Phase 2, Meerut, Uttar Pradesh – 250001
         <br />
-        Email: <PH>[LEGAL / SUPPORT EMAIL]</PH>
+        Email: officialpremsetu@gmail.com
         <br />
-        Phone: <PH>[CONTACT PHONE NUMBER]</PH>
+        Phone: +91 74098 68966
       </p>
     </PolicySection>
   </PolicyShell>

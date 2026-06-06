@@ -96,11 +96,14 @@ back to the clean form after pushing so the token isn't stored in git config.
 
 - **Community positioning:** PremSetu is ALL-community — do NOT add Rajput-only, caste-specific,
   or region-specific positioning to any UI copy. Keep all hero/footer/card copy inclusive.
-- **Visual style — festive premium Indian-wedding:** Build on **brick-red** (`--primary: #7c2d12`)
-  + **gold** (`--gold-warm`, `--gold-deep`, `--gold-light`, `--gold-sheen`) with tasteful traditional
-  motifs — mandala watermarks, gold filigree dividers, shimmer on key elements. **Ornate, not gaudy;
-  festive, not cluttered — tasteful and trustworthy first.** Rich warm jewel-tone accent vars
-  (`--jewel-pink`, `--jewel-emerald`, `--marigold`) exist for sparing use only.
+- **Visual style — festive premium Indian-wedding:** Brand palette is **rose-magenta + orange**
+  (matches the PremSetu logo): `--primary: #c2185b`, `--accent: #f57c00`, signature
+  `--brand-gradient` (pink→coral→orange) used on primary buttons, the logo, stat numbers, and the
+  progress ring. **Gold** (`--gold-warm/-deep/-light/-sheen`) remains the festive metal accent
+  (mandala watermarks, filigree dividers, card top-borders, shimmer). **Ornate, not gaudy; festive,
+  not cluttered — tasteful and trustworthy first.** (History note: the site was brick-red `#7c2d12`
+  before the logo-driven repalette — all `--primary*` + legacy `--forest*` aliases now resolve to
+  the magenta family, so older components recolour automatically.)
 - **Motion:** Smooth, performant micro-interactions — card hover-lift + gold glow, button shimmer
   sweep, staggered card entrance (`.fest-stagger`), shimmer-text. Use transform/opacity only;
   always honour `prefers-reduced-motion` (global guard already in `index.css`).
@@ -329,17 +332,27 @@ Blank / "Any" value → param is empty string → `if (field)` is falsy → filt
 
 `PaidRoute` is in `client/src/components/PaidRoute.jsx`.
 
-## Logo component
+## Logo component (`client/src/components/Logo.jsx`)
 
-Two SVG variants in `client/src/components/Logo.jsx`:
+The brand mark is the **two-figures-forming-a-heart-over-a-bridge** symbol in the
+pink→orange gradient — a scalable SVG recreation of the PremSetu logo artwork.
 
-| Export | Name | Description |
-|--------|------|-------------|
-| `LogoA` | "The Arch" | Single bridge arch + pillars + gold apex circle. "Prem" brick-red, "Setu" gold. **Currently active.** |
-| `LogoB` | "The Torana" | Double nested arch (outer brick-red, inner gold). Unified brick-red wordmark. |
+| Export | What it is |
+|--------|-----------|
+| `<PremSetuMark height={n} />` | Symbol only — used big in the Home brand lockup |
+| `<LogoA height={n} />` | Symbol + lowercase "premsetu" wordmark (prem=magenta, setu=orange). Used in Navbar + Footer. |
+| `<LogoB />` | Alias of `LogoA` (kept so older imports don't break) |
 
-To switch: change `LogoA` → `LogoB` in `Navbar.jsx` and `Footer.jsx` (one import each).
 Usage: `<LogoA height={34} />` (navbar), `<LogoA height={28} />` (footer).
+The mark colours are hard-coded so it renders correctly on dark backgrounds.
+
+> **To use the exact raster artwork instead:** drop it at `client/public/premsetu-logo.png`,
+> swap `<PremSetuMark/>` for `<img>` in the Home brand section, and set it as the favicon in
+> `public/index.html`. (The SVG recreation is preferred — retina-crisp, responsive, themeable.)
+
+The **Home brand lockup** (`.home-brand-card` in `Home.jsx`) recreates the full logo poster:
+big mark + wordmark + gold filigree + the Hindi tagline "रिश्ता नहीं, जीवन का सेतु" + trust badges,
+on a soft pink/orange radial glow.
 
 ## Hero image
 

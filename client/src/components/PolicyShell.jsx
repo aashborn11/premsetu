@@ -11,13 +11,6 @@ export const PH = ({ children }) => (
 const PolicyShell = ({ title, subtitle, lastUpdated, children }) => (
   <main className="policy-shell">
     <div className="policy-container">
-      <div className="policy-template-warning">
-        ⚠ TEMPLATE — This page is a draft. Have it reviewed and customised by a
-        lawyer before going live. Replace all{" "}
-        <span className="policy-placeholder">highlighted placeholders</span>{" "}
-        with real business details.
-      </div>
-
       <header className="policy-header">
         <span className="eyebrow">Legal</span>
         <h1>{title}</h1>

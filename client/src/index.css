@@ -4,16 +4,21 @@
    DESIGN TOKENS
 =========================== */
 :root {
-  /* Brand — muted warm brick, not vibrant */
-  --primary:        #7c2d12;
-  --primary-dark:   #5c1f0a;
-  --primary-soft:   #9a3b1a;
-  --primary-tint:   #fef3ee;
-  --accent:         #b45309;
-  --gold:           #d97706;
+  /* Brand — rose-magenta + orange (PremSetu logo) with festive gold */
+  --primary:        #c2185b;   /* rose-magenta — logo "prem" */
+  --primary-dark:   #9d174d;   /* deep magenta */
+  --primary-soft:   #d81b60;   /* vivid rose */
+  --primary-tint:   #fdeef4;   /* soft pink wash */
+  --accent:         #f57c00;   /* orange — logo "setu" */
+  --gold:           #e0a528;
   --gold-warm:      #b5892a;
   --gold-tint:      #fdf8ef;
-  --gold-border:    rgba(181,137,42,0.18);
+  --gold-border:    rgba(181,137,42,0.20);
+
+  /* Signature brand gradient (pink → coral → orange) */
+  --brand-pink:     #d81b60;
+  --brand-orange:   #f57c00;
+  --brand-gradient: linear-gradient(120deg, #d81b60 0%, #ec5a3a 48%, #f57c00 100%);
 
   /* Surfaces */
   --bg:             #f8f5f1;
@@ -34,7 +39,7 @@
   --shadow:      0 2px 10px rgba(0,0,0,0.08);
   --shadow-md:   0 6px 24px rgba(0,0,0,0.09);
   --shadow-lg:   0 12px 40px rgba(0,0,0,0.12);
-  --shadow-hover:0 10px 32px rgba(124,45,18,0.18);
+  --shadow-hover:0 10px 32px rgba(194,24,91,0.20);
 
   /* Typography */
   --font-body:    "Plus Jakarta Sans", sans-serif;
@@ -44,13 +49,13 @@
   --max-width: 1240px;
 
   /* Legacy aliases — keep all existing components working */
-  --forest:        #7c2d12;
-  --forest-deep:   #5c1f0a;
-  --forest-soft:   #9a3b1a;
-  --ivory:         #fef3ee;
+  --forest:        #c2185b;
+  --forest-deep:   #9d174d;
+  --forest-soft:   #d81b60;
+  --ivory:         #fdeef4;
   --linen:         #f8f5f1;
-  --clay:          #b45309;
-  --sand:          #f0e4d8;
+  --clay:          #f57c00;
+  --sand:          #fbe6d9;
   --surface-strong:#ffffff;
   --surface-soft:  rgba(254,243,238,0.95);
   --muted-soft:    #9ca3af;
@@ -89,7 +94,18 @@ body {
 
 #root { min-height: 100vh; }
 
-::selection { background: rgba(124,45,18,0.15); }
+::selection { background: rgba(216,27,96,0.16); }
+
+/* Subtle branded scrollbar */
+* { scrollbar-color: rgba(194,24,91,0.35) transparent; scrollbar-width: thin; }
+::-webkit-scrollbar { width: 11px; height: 11px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(var(--primary), var(--accent));
+  border-radius: 999px;
+  border: 3px solid var(--bg);
+}
+::-webkit-scrollbar-thumb:hover { background: linear-gradient(var(--primary-dark), var(--primary)); }
 
 a { color: inherit; text-decoration: none; }
 
@@ -97,6 +113,18 @@ button, input, select, textarea { font: inherit; }
 
 button { cursor: pointer; border: 0; }
 button:disabled { cursor: not-allowed; opacity: 0.6; }
+
+/* Keyboard-only focus ring (accessibility) — doesn't affect mouse users */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
 
 img { display: block; max-width: 100%; }
 
@@ -300,12 +328,12 @@ p { margin: 0; }
 
 .primary-button {
   color: #fff;
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  box-shadow: 0 4px 14px rgba(124,45,18,0.28);
+  background: var(--brand-gradient);
+  box-shadow: 0 4px 14px rgba(216,27,96,0.30);
 }
 .primary-button:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 22px rgba(124,45,18,0.36);
+  box-shadow: 0 8px 24px rgba(216,27,96,0.40);
 }
 .primary-button:active:not(:disabled) { transform: translateY(0); }
 
@@ -806,7 +834,7 @@ p { margin: 0; }
 .filter-panel select:focus,
 .chat-form input:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(124,45,18,0.1);
+  box-shadow: 0 0 0 3px rgba(216,27,96,0.13);
   transform: translateY(-1px);
 }
 .form-grid textarea { min-height: 140px; resize: vertical; }
@@ -925,6 +953,14 @@ p { margin: 0; }
   height: 290px;
   object-fit: cover;
   transition: transform 0.4s ease;
+}
+/* Soft scrim for badge legibility + depth */
+.profile-card-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(40,12,24,0.34) 0%, transparent 38%);
+  pointer-events: none;
 }
 .profile-card:hover .profile-card-media img { transform: scale(1.04); }
 
@@ -1580,8 +1616,9 @@ p { margin: 0; }
   letter-spacing: -0.01em;
 }
 
-.ps-logo-prem { color: var(--primary-dark); }
-.ps-logo-setu { color: var(--gold-warm); }
+.ps-logo-text { font-size: 1.34rem; letter-spacing: -0.02em; }
+.ps-logo-prem { color: var(--primary); }
+.ps-logo-setu { color: var(--accent); }
 
 /* =====================================================
    HOME PAGE — PHASE 1.5 DESIGN
@@ -1623,8 +1660,9 @@ p { margin: 0; }
   inset: 0;
   background: linear-gradient(
     135deg,
-    rgba(92, 31, 10, 0.65) 0%,
-    rgba(28, 25, 23, 0.72) 100%
+    rgba(157, 23, 77, 0.62) 0%,
+    rgba(124, 30, 50, 0.55) 45%,
+    rgba(30, 12, 24, 0.78) 100%
   );
 }
 
@@ -2629,4 +2667,370 @@ p { margin: 0; }
   .home-hero-mandala { top: -80px; right: -90px; }
   .fest-divider { margin: 0 auto 56px; }
   .fest-divider-line { width: 24vw; }
+}
+
+/* =====================================================
+   BRAND PIVOT — logo lockup + dashboard glow-up
+   Rose-magenta + orange brand identity (PremSetu logo).
+===================================================== */
+
+/* ── Home brand lockup band ── */
+.home-brand-section { padding-bottom: 88px; }
+
+.home-brand-card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  padding: 56px 24px 48px;
+  border: 1px solid var(--gold-border);
+  border-radius: 28px;
+  background: radial-gradient(125% 120% at 50% 0%, var(--primary-tint) 0%, var(--surface) 58%);
+  box-shadow: var(--shadow);
+}
+
+.home-brand-glow {
+  position: absolute;
+  top: -150px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 460px;
+  height: 460px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(216,27,96,0.18), rgba(245,124,0,0.12) 45%, transparent 70%);
+  pointer-events: none;
+}
+
+.home-brand-mark {
+  position: relative;
+  filter: drop-shadow(0 10px 22px rgba(216,27,96,0.24));
+  animation: festRise 0.6s ease both;
+}
+
+.home-brand-word {
+  position: relative;
+  font-family: var(--font-heading);
+  font-size: clamp(2.4rem, 6vw, 3.7rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin: 2px 0 0;
+}
+
+.home-brand-divider {
+  width: 300px !important;
+  max-width: 78%;
+  margin: 6px auto 2px !important;
+}
+
+.home-brand-tagline {
+  position: relative;
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-size: clamp(1.05rem, 2.6vw, 1.45rem);
+  color: var(--primary-dark);
+  margin: 0;
+}
+
+.home-brand-badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+.home-brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 17px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--gold-border);
+  box-shadow: var(--shadow-sm);
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--ink);
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+}
+.home-brand-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-gold);
+  border-color: rgba(181,137,42,0.42);
+}
+.home-brand-badge-icon { font-size: 1.05rem; line-height: 1; }
+
+/* ── Dashboard — richer brand hero ── */
+.dashboard-hero-card {
+  background: linear-gradient(135deg, #9d174d 0%, #c2185b 42%, #e0552e 88%, #f57c00 120%);
+}
+
+/* Profile-strength ring */
+.ring-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.ring-wrap {
+  position: relative;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+}
+.ring-label {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1.7rem;
+  color: var(--primary-dark);
+}
+.ring-label small { font-size: 0.8rem; font-weight: 700; color: var(--muted); margin-left: 1px; }
+
+/* Stat cards — icon + gradient number */
+.stat-card {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  gap: 14px;
+}
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  font-size: 1.4rem;
+  background: var(--primary-tint);
+  box-shadow: inset 0 0 0 1px var(--gold-border);
+}
+.stat-body { display: grid; gap: 2px; }
+.stat-card h2 {
+  font-size: 1.95rem;
+  line-height: 1;
+  background: var(--brand-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+.stat-card p { font-size: 0.82rem; margin: 0; }
+
+/* ── Brand-pivot responsive ── */
+@media (max-width: 680px) {
+  .home-brand-card { padding: 40px 18px 36px; }
+  .ring-row { flex-direction: column; text-align: center; gap: 12px; }
+}
+
+/* =====================================================
+   POLISH PASS — Why section, footer bottom bar
+===================================================== */
+
+/* ── Home: Why PremSetu ── */
+.home-why-section { padding-bottom: 88px; }
+.home-why-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+.home-why-card {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  gap: 10px;
+  padding: 26px 22px;
+  border-radius: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.home-why-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--brand-gradient);
+}
+.home-why-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+  border-color: rgba(216,27,96,0.22);
+}
+.home-why-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 15px;
+  display: grid;
+  place-items: center;
+  font-size: 1.5rem;
+  background: var(--primary-tint);
+  box-shadow: inset 0 0 0 1px var(--gold-border);
+}
+.home-why-card h3 { font-size: 1.06rem; line-height: 1.3; }
+.home-why-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; margin: 0; }
+
+/* ── Footer: hindi tagline + bottom bar ── */
+.footer-tagline-hi {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-size: 0.98rem;
+  color: var(--primary);
+  margin: 0;
+}
+
+.footer-bottom {
+  grid-column: 1 / -1;
+  margin-top: 6px;
+  padding: 18px 24px;
+  border-radius: 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+.footer-bottom-mid { font-weight: 600; color: var(--ink); }
+.footer-heart { color: var(--primary); }
+
+@media (max-width: 680px) {
+  .home-why-grid { grid-template-columns: 1fr 1fr; }
+  .footer-bottom { flex-direction: column; text-align: center; }
+}
+@media (max-width: 420px) {
+  .home-why-grid { grid-template-columns: 1fr; }
+}
+
+/* ── Membership: included checklist + trust pills ── */
+.membership-checklist {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 11px;
+  text-align: left;
+}
+.membership-checklist li {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 0.94rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.membership-check {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #fff;
+  background: var(--brand-gradient);
+  box-shadow: 0 2px 6px rgba(216,27,96,0.3);
+}
+.membership-trust-pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+.membership-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: var(--primary-tint);
+  border: 1px solid var(--gold-border);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+.membership-pill-link { transition: transform 0.18s ease, box-shadow 0.18s ease; }
+.membership-pill-link:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+
+/* ── Auth showcase brand mark ── */
+.auth-showcase-mark {
+  filter: drop-shadow(0 6px 16px rgba(0,0,0,0.28));
+  margin-bottom: 4px;
+}
+
+/* ── Festive 404 ── */
+.notfound-shell {
+  min-height: 70vh;
+  justify-content: center;
+  align-items: center;
+}
+.notfound-card {
+  position: relative;
+  overflow: hidden;
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  display: grid;
+  gap: 16px;
+  justify-items: center;
+  padding: 56px 32px;
+  background: radial-gradient(125% 120% at 50% 0%, var(--primary-tint), var(--surface) 60%);
+  border: 1px solid var(--gold-border);
+  border-radius: 28px;
+  box-shadow: var(--shadow);
+}
+.notfound-card > *:not(.notfound-glow) { position: relative; }
+.notfound-glow {
+  position: absolute;
+  top: -140px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(216,27,96,0.16), rgba(245,124,0,0.10) 45%, transparent 70%);
+  pointer-events: none;
+}
+.notfound-mark {
+  filter: drop-shadow(0 10px 22px rgba(216,27,96,0.22));
+  animation: festRise 0.6s ease both;
+}
+.notfound-code {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: clamp(3rem, 12vw, 5.5rem);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  background: var(--brand-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+.notfound-title { font-size: clamp(1.4rem, 3.5vw, 2rem); }
+.notfound-divider { width: 240px !important; max-width: 70%; margin: 2px auto !important; }
+.notfound-card .muted-copy { max-width: 42ch; }
+
+/* ── Navbar: elevate on scroll ── */
+.navbar.scrolled {
+  box-shadow: 0 6px 24px rgba(124,30,60,0.12);
+  border-color: rgba(216,27,96,0.14);
+  background: rgba(255,255,255,0.97);
+}
+/* Active nav link — brand underline accent */
+.nav-link.active {
+  position: relative;
+  background: var(--primary-tint);
 }

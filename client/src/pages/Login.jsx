@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
+import { PremSetuMark } from "../components/Logo";
 
 const Login = () => {
   const [email, setEmail]       = useState("");
@@ -54,18 +55,19 @@ const Login = () => {
 
         {/* LEFT PANEL */}
         <aside className="auth-showcase">
+          <PremSetuMark height={56} className="auth-showcase-mark" />
           <div>
             <span className="eyebrow">Welcome back</span>
-            <h1>Return to your matches and conversations.</h1>
+            <h1>Return to your matches.</h1>
           </div>
           <p className="support-copy">
-            Login and continue where you left off — view profiles, send interest, and chat with your matches.
+            Login and continue where you left off — view profiles and send interest to your matches.
           </p>
           <div className="auth-point-grid">
             {[
-              { t: "Your profile is safe",     d: "Only you can see and edit your full account details." },
-              { t: "Chat after mutual interest", d: "Private conversations open only when both sides are interested." },
-              { t: "Genuine people only",        d: "Everyone here is looking for a serious relationship." }
+              { t: "Your profile is safe",   d: "Only you can see and edit your full account details." },
+              { t: "Personal matchmaker",    d: "Our team helps with every introduction, personally." },
+              { t: "Genuine people only",    d: "Everyone here is looking for a serious relationship." }
             ].map(i => (
               <article key={i.t} className="auth-point">
                 <strong>{i.t}</strong>

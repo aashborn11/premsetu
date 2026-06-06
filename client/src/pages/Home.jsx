@@ -1,22 +1,31 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { FiligreeDivider, Mandala } from "../components/Festive";
+import { PremSetuMark } from "../components/Logo";
 
 /*
  * Hero image: drop hero.jpg into /public/ — loaded automatically.
  * Recommended: compressed JPEG or WebP, landscape, ≥1600 px wide.
  */
 
-const trustSignals = [
-  { icon: "✓", title: "Verified Profiles" },
-  { icon: "⊕", title: "Privacy First" },
-  { icon: "◈", title: "All Communities" }
+const brandBadges = [
+  { icon: "🛡️", label: "Trusted" },
+  { icon: "🪔", label: "Indian Values" },
+  { icon: "👪", label: "Cultured Matches" },
+  { icon: "🔒", label: "Safe & Private" }
 ];
 
 const steps = [
   { title: "Register Free", text: "Create your profile in minutes." },
   { title: "Complete Your Profile", text: "Add your details and preferences." },
   { title: "Find Your Match", text: "Connect when the interest is mutual." }
+];
+
+const whyFeatures = [
+  { icon: "🛡️", title: "Verified Profiles", text: "Real people, genuine intent." },
+  { icon: "🔒", title: "Privacy First", text: "Your details stay protected." },
+  { icon: "🤝", title: "Personal Matchmaker", text: "We guide every introduction." },
+  { icon: "🔮", title: "Kundli Matching", text: "Horoscope match, coming soon." }
 ];
 
 const Home = () => {
@@ -65,15 +74,24 @@ const Home = () => {
         </div>
       </div>
 
-      {/* ── 2. TRUST STRIP ── */}
-      <section className="home-section home-trust-section">
-        <div className="home-trust-row">
-          {trustSignals.map(t => (
-            <div key={t.title} className="home-trust-item">
-              <span className="home-trust-icon">{t.icon}</span>
-              <strong>{t.title}</strong>
-            </div>
-          ))}
+      {/* ── 2. BRAND LOCKUP ── */}
+      <section className="home-section home-brand-section">
+        <div className="home-brand-card">
+          <span className="home-brand-glow" aria-hidden="true" />
+          <PremSetuMark height={104} className="home-brand-mark" />
+          <h2 className="home-brand-word">
+            <span className="ps-logo-prem">prem</span><span className="ps-logo-setu">setu</span>
+          </h2>
+          <FiligreeDivider className="home-brand-divider" />
+          <p className="home-brand-tagline">रिश्ता नहीं, जीवन का सेतु</p>
+          <div className="home-brand-badges">
+            {brandBadges.map(b => (
+              <div key={b.label} className="home-brand-badge">
+                <span className="home-brand-badge-icon">{b.icon}</span>
+                <strong>{b.label}</strong>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -89,6 +107,23 @@ const Home = () => {
               <span className="step-number">0{i + 1}</span>
               <h3>{step.title}</h3>
               <p>{step.text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* ── 3.5 WHY PREMSETU ── */}
+      <section className="home-section home-why-section">
+        <div className="home-section-heading">
+          <span className="eyebrow">🪔 Why PremSetu</span>
+          <h2>Built on trust, not just matches.</h2>
+        </div>
+        <div className="home-why-grid fest-stagger">
+          {whyFeatures.map((f) => (
+            <article key={f.title} className="home-why-card">
+              <span className="home-why-icon">{f.icon}</span>
+              <h3>{f.title}</h3>
+              <p>{f.text}</p>
             </article>
           ))}
         </div>

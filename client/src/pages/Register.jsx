@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
+import { PremSetuMark } from "../components/Logo";
 
 const MONTHS = [
   { v: "01", l: "January (Jan)" }, { v: "02", l: "February (Feb)" },
@@ -91,6 +92,7 @@ const Register = () => {
 
         {/* LEFT PANEL */}
         <aside className="auth-showcase">
+          <PremSetuMark height={56} className="auth-showcase-mark" />
           <div>
             <span className="eyebrow">Start your journey</span>
             <h1>Create your profile and find the right match.</h1>

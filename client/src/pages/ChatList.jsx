@@ -35,7 +35,7 @@ const ChatList = () => {
               <article className="match-card" style={{ cursor: "pointer" }}>
                 <div className="match-card-media">
                   <img
-                    src={profile.profilePhoto || "https://placehold.co/400x400/F0EDE6/3B4A3A?text=PS"}
+                    src={profile.profilePhoto || "https://placehold.co/400x400/fdeef4/c2185b?text=PS"}
                     alt={profile.fullName}
                   />
                 </div>

@@ -2,7 +2,7 @@
 // before going live. Replace all placeholders with real business details.
 // This policy references the Digital Personal Data Protection Act, 2023 (DPDP Act).
 
-import PolicyShell, { PolicySection, PH } from "../components/PolicyShell";
+import PolicyShell, { PolicySection } from "../components/PolicyShell";
 
 const PrivacyPolicy = () => (
   <PolicyShell
@@ -12,10 +12,12 @@ const PrivacyPolicy = () => (
   >
     <PolicySection title="1. Who We Are">
       <p>
-        PremSetu is operated by <PH>[LEGAL ENTITY NAME]</PH>, registered at{" "}
-        <PH>[REGISTERED ADDRESS]</PH> ("<strong>Data Fiduciary</strong>" under
-        the Digital Personal Data Protection Act, 2023). For questions about
-        this policy, contact us at <PH>[PRIVACY / DATA EMAIL]</PH>.
+        PremSetu is owned and operated by Karmveer Singh (sole proprietor; the
+        business is not yet incorporated as a company), based at D-5, Teachers
+        Colony, Shradhapuri Phase 2, Meerut, Uttar Pradesh – 250001 (the
+        "<strong>Data Fiduciary</strong>" under the Digital Personal Data
+        Protection Act, 2023). For questions about this policy, contact us at{" "}
+        officialpremsetu@gmail.com.
       </p>
       <p>
         This policy applies to all visitors, registered users, and paying
@@ -211,7 +213,7 @@ const PrivacyPolicy = () => (
         </li>
         <li>
           <strong>Deleted accounts:</strong> We will delete or anonymise your
-          personal data within <PH>[30/60/90] days</PH> of account deletion,
+          personal data within 90 days of account deletion,
           except where retention is required by law (e.g., financial records
           for 7 years under Indian accounting rules).
         </li>
@@ -240,7 +242,7 @@ const PrivacyPolicy = () => (
         <li>
           <strong>Right to erasure:</strong> Request deletion of your personal
           data. You can delete your account by contacting us at{" "}
-          <PH>[PRIVACY / DATA EMAIL]</PH>. Note that some data may be retained
+          officialpremsetu@gmail.com. Note that some data may be retained
           for legal compliance (see Section 7).
         </li>
         <li>
@@ -256,8 +258,8 @@ const PrivacyPolicy = () => (
       </ul>
       <p>
         To exercise any of these rights, contact us at{" "}
-        <PH>[PRIVACY / DATA EMAIL]</PH>. We will respond within{" "}
-        <PH>[30] days</PH>.
+        officialpremsetu@gmail.com. We will respond within{" "}
+        30 days.
       </p>
     </PolicySection>
 
@@ -289,15 +291,15 @@ const PrivacyPolicy = () => (
         the Grievance Officer is:
       </p>
       <p>
-        <strong>Name:</strong> <PH>[GRIEVANCE OFFICER FULL NAME]</PH>
+        <strong>Name:</strong> Karmveer Singh
         <br />
-        <strong>Designation:</strong> <PH>[DESIGNATION]</PH>
+        <strong>Designation:</strong> Grievance Officer
         <br />
-        <strong>Email:</strong> <PH>[GRIEVANCE OFFICER EMAIL]</PH>
+        <strong>Email:</strong> officialpremsetu@gmail.com
         <br />
-        <strong>Phone:</strong> <PH>[GRIEVANCE OFFICER PHONE]</PH>
+        <strong>Phone:</strong> +91 74098 68966
         <br />
-        <strong>Address:</strong> <PH>[REGISTERED ADDRESS]</PH>
+        <strong>Address:</strong> D-5, Teachers Colony, Shradhapuri Phase 2, Meerut, Uttar Pradesh – 250001
       </p>
       <p>
         The Grievance Officer will acknowledge your complaint within{" "}
@@ -321,13 +323,13 @@ const PrivacyPolicy = () => (
         For any privacy-related queries, please contact:
       </p>
       <p>
-        <strong><PH>[LEGAL ENTITY NAME]</PH></strong>
+        <strong>Karmveer Singh (Proprietor, PremSetu)</strong>
         <br />
-        <PH>[REGISTERED ADDRESS]</PH>
+        D-5, Teachers Colony, Shradhapuri Phase 2, Meerut, Uttar Pradesh – 250001
         <br />
-        Email: <PH>[PRIVACY / DATA EMAIL]</PH>
+        Email: officialpremsetu@gmail.com
         <br />
-        Phone: <PH>[CONTACT PHONE NUMBER]</PH>
+        Phone: +91 74098 68966
       </p>
     </PolicySection>
   </PolicyShell>

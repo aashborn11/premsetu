@@ -7,6 +7,34 @@ import ProfileCard from "../components/ProfileCard";
 import MatchCard from "../components/MatchCard";
 import { Mandala } from "../components/Festive";
 
+/* Circular profile-strength ring (SVG, brand gradient) */
+const ProgressRing = ({ value = 0, size = 116 }) => {
+  const stroke = 9;
+  const r = (size - stroke) / 2;
+  const circ = 2 * Math.PI * r;
+  const offset = circ - (Math.min(100, Math.max(0, value)) / 100) * circ;
+  return (
+    <div className="ring-wrap" style={{ width: size, height: size }}>
+      <svg width={size} height={size} className="ring-svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#d81b60" />
+            <stop offset="1" stopColor="#f57c00" />
+          </linearGradient>
+        </defs>
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none"
+                stroke="rgba(194,24,91,0.12)" strokeWidth={stroke} />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none"
+                stroke="url(#ringGrad)" strokeWidth={stroke} strokeLinecap="round"
+                strokeDasharray={circ} strokeDashoffset={offset}
+                transform={`rotate(-90 ${size / 2} ${size / 2})`}
+                style={{ transition: "stroke-dashoffset 0.9s cubic-bezier(0.4,0,0.2,1)" }} />
+      </svg>
+      <span className="ring-label">{value}<small>%</small></span>
+    </div>
+  );
+};
+
 const Dashboard = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -102,34 +130,31 @@ const Dashboard = () => {
         </div>
 
         <aside className="dashboard-side-panel">
-          <div>
-            <span className="eyebrow">Profile Strength</span>
-            <h3>{completion}% complete</h3>
-            <p className="muted-copy">A complete profile earns more trust.</p>
-          </div>
-          <div className="progress-bar">
-            <div style={{ width: `${completion}%` }} />
+          <span className="eyebrow">Profile Strength</span>
+          <div className="ring-row">
+            <ProgressRing value={completion} />
+            <p className="muted-copy">A complete profile earns more trust and better replies.</p>
           </div>
           <div className="helper-ribbon">{dashboardTip}</div>
         </aside>
       </div>
 
-      <div className="stats-grid small">
+      <div className="stats-grid small fest-stagger">
         <article className="stat-card">
-          <h2>{stats.sent}</h2>
-          <p>Interests Sent</p>
+          <span className="stat-icon">✉️</span>
+          <div className="stat-body"><h2>{stats.sent}</h2><p>Interests Sent</p></div>
         </article>
         <article className="stat-card">
-          <h2>{stats.received}</h2>
-          <p>Interests Received</p>
+          <span className="stat-icon">💌</span>
+          <div className="stat-body"><h2>{stats.received}</h2><p>Interests Received</p></div>
         </article>
         <article className="stat-card">
-          <h2>{stats.matches}</h2>
-          <p>Mutual Matches</p>
+          <span className="stat-icon">💞</span>
+          <div className="stat-body"><h2>{stats.matches}</h2><p>Mutual Matches</p></div>
         </article>
         <article className="stat-card">
-          <h2>{completion}%</h2>
-          <p>Profile Strength</p>
+          <span className="stat-icon">⭐</span>
+          <div className="stat-body"><h2>{completion}%</h2><p>Profile Strength</p></div>
         </article>
       </div>
 

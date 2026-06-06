@@ -42,7 +42,7 @@ export function openRazorpayCheckout(options) {
       }
     });
     rzp.on("payment.failed", (response) =>
-      reject(new Error(response.error?.description || "Payment fail ho gaya."))
+      reject(new Error(response.error?.description || "Payment failed. Please try again."))
     );
     rzp.open();
   });

@@ -2,7 +2,7 @@
 // before going live. Replace all placeholders with real business details.
 // Razorpay KYC requires a clear, unambiguous refund/cancellation policy.
 
-import PolicyShell, { PolicySection, PH } from "../components/PolicyShell";
+import PolicyShell, { PolicySection } from "../components/PolicyShell";
 
 const RefundPolicy = () => (
   <PolicyShell
@@ -97,7 +97,7 @@ const RefundPolicy = () => (
       </p>
       <ul>
         <li>
-          <strong>Email:</strong> <PH>[SUPPORT / REFUND EMAIL]</PH>
+          <strong>Email:</strong> officialpremsetu@gmail.com
         </li>
         <li>
           <strong>Subject line:</strong>{" "}
@@ -148,7 +148,7 @@ const RefundPolicy = () => (
       </p>
       <p>
         If you wish to close your PremSetu account entirely, you may contact
-        us at <PH>[SUPPORT EMAIL]</PH>. Account deletion is irreversible.
+        us at officialpremsetu@gmail.com. Account deletion is irreversible.
         Your paid membership will not be refunded upon account deletion (see
         Section 2 above).
       </p>
@@ -156,7 +156,7 @@ const RefundPolicy = () => (
 
     <PolicySection title="7. Chargebacks">
       <p>
-        We ask that you contact us at <PH>[SUPPORT / REFUND EMAIL]</PH>{" "}
+        We ask that you contact us at officialpremsetu@gmail.com{" "}
         before initiating a chargeback with your bank. Most disputes can be
         resolved faster through direct communication. Initiating an unjustified
         chargeback may result in permanent suspension of your account.
@@ -177,13 +177,13 @@ const RefundPolicy = () => (
         For refund queries or payment disputes:
       </p>
       <p>
-        <strong><PH>[LEGAL ENTITY NAME]</PH></strong>
+        <strong>Karmveer Singh (Proprietor, PremSetu)</strong>
         <br />
-        <PH>[REGISTERED ADDRESS]</PH>
+        D-5, Teachers Colony, Shradhapuri Phase 2, Meerut, Uttar Pradesh – 250001
         <br />
-        Email: <PH>[SUPPORT / REFUND EMAIL]</PH>
+        Email: officialpremsetu@gmail.com
         <br />
-        Phone: <PH>[CONTACT PHONE NUMBER]</PH>
+        Phone: +91 74098 68966
       </p>
     </PolicySection>
   </PolicyShell>

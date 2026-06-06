@@ -255,7 +255,7 @@ const EditProfile = () => {
             <span className="eyebrow">Profile Builder</span>
             <h1>Build a profile people can understand and trust.</h1>
             <p className="muted-copy">
-              Keep the wording simple. English clear ho, that is enough. You can always refine details later.
+              Keep the wording simple and clear — that's enough. You can always refine details later.
             </p>
           </div>
 

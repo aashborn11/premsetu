@@ -1,7 +1,8 @@
-// TEMPLATE — Replace all placeholders with real business details before going live.
+// Business details filled June 2026. Still advisable to have a lawyer review
+// this legal copy before relying on it for live payments.
 
 import { Link } from "react-router-dom";
-import PolicyShell, { PH } from "../components/PolicyShell";
+import PolicyShell from "../components/PolicyShell";
 
 const ContactCard = ({ label, children }) => (
   <div className="contact-card">
@@ -13,46 +14,42 @@ const ContactCard = ({ label, children }) => (
 const ContactUs = () => (
   <PolicyShell
     title="Contact Us"
-    subtitle="We're here to help. Reach out to our support team and we'll get back to you as soon as possible."
-    lastUpdated="June 2025"
+    subtitle="We're here to help. Reach out and we'll get back to you as soon as we can."
+    lastUpdated="June 2026"
   >
     <section className="policy-section">
       <h2>Get in Touch</h2>
       <p>
         Whether you have a question about your profile, a payment issue, a
-        safety concern, or anything else — our team is happy to assist.
+        safety concern, or anything else — we're happy to assist.
       </p>
 
       <div className="contact-grid">
         <ContactCard label="Email Support">
-          <a href="mailto:support@premsetu.in">
-            <PH>support@premsetu.in</PH>
-          </a>
+          <a href="mailto:officialpremsetu@gmail.com">officialpremsetu@gmail.com</a>
           <br />
           We aim to respond within <strong>24–48 hours</strong> on business
           days.
         </ContactCard>
 
         <ContactCard label="Phone">
-          <PH>[CONTACT PHONE NUMBER]</PH>
+          +91 74098 68966
           <br />
-          Available Mon–Sat, <PH>[9:00 AM – 6:00 PM IST]</PH>
+          Available Mon–Sat, 10:00 AM – 6:00 PM IST
         </ContactCard>
 
-        <ContactCard label="Registered Address">
-          <PH>[LEGAL ENTITY NAME]</PH>
+        <ContactCard label="Address">
+          Karmveer Singh (Proprietor, PremSetu)
           <br />
-          <PH>[FULL REGISTERED ADDRESS]</PH>
+          D-5, Teachers Colony, Shradhapuri Phase 2
           <br />
-          <PH>[CITY, STATE – PIN CODE]</PH>
+          Meerut, Uttar Pradesh – 250001
           <br />
           India
         </ContactCard>
 
         <ContactCard label="Payment & Refund Queries">
-          <a href="mailto:support@premsetu.in">
-            <PH>support@premsetu.in</PH>
-          </a>
+          <a href="mailto:officialpremsetu@gmail.com">officialpremsetu@gmail.com</a>
           <br />
           Include your Razorpay payment ID and registered email in your
           message.
@@ -69,18 +66,17 @@ const ContactUs = () => (
         Grievance Officer:
       </p>
       <p>
-        <strong>Name:</strong> <PH>[GRIEVANCE OFFICER FULL NAME]</PH>
+        <strong>Name:</strong> Karmveer Singh
         <br />
-        <strong>Designation:</strong> <PH>[DESIGNATION]</PH>
+        <strong>Designation:</strong> Grievance Officer
         <br />
         <strong>Email:</strong>{" "}
-        <a href="mailto:grievance@premsetu.in">
-          <PH>grievance@premsetu.in</PH>
-        </a>
+        <a href="mailto:officialpremsetu@gmail.com">officialpremsetu@gmail.com</a>
         <br />
-        <strong>Phone:</strong> <PH>[GRIEVANCE OFFICER PHONE]</PH>
+        <strong>Phone:</strong> +91 74098 68966
         <br />
-        <strong>Address:</strong> <PH>[REGISTERED ADDRESS]</PH>
+        <strong>Address:</strong> D-5, Teachers Colony, Shradhapuri Phase 2,
+        Meerut, Uttar Pradesh – 250001
       </p>
       <p>
         We will acknowledge your complaint within <strong>24 hours</strong> and

@@ -262,7 +262,7 @@ const Matches = () => {
       {loading ? (
         <div className="empty-state">Loading profiles...</div>
       ) : profiles.length ? (
-        <div className="cards-grid">
+        <div className="cards-grid fest-stagger">
           {profiles.map((profile) => (
             <ProfileCard
               key={profile._id}

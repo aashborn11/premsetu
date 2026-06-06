@@ -159,6 +159,18 @@ const Membership = () => {
           </span>
         </div>
 
+        {/* What's included */}
+        <ul className="membership-checklist">
+          {[
+            "See full profiles & contact details",
+            "Send unlimited interests",
+            "Personal matchmaker support",
+            "Kundli matching (coming soon)"
+          ].map((item) => (
+            <li key={item}><span className="membership-check">✓</span>{item}</li>
+          ))}
+        </ul>
+
         {/* Soft dismissal message */}
         {status === STATUS.DISMISSED && (
           <div className="membership-soft-prompt">
@@ -181,6 +193,12 @@ const Membership = () => {
         >
           {buttonLabel()}
         </button>
+
+        <div className="membership-trust-pills">
+          <span className="membership-pill">🔒 100% Secure</span>
+          <span className="membership-pill">♾️ Lifetime Access</span>
+          <a href="/refund" className="membership-pill membership-pill-link">↩️ Refund Policy</a>
+        </div>
 
         <p className="membership-secure-note">
           🔒 Secured by Razorpay · UPI, Cards, Net Banking &amp; Wallets accepted
