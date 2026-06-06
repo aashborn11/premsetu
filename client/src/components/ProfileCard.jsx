@@ -6,18 +6,22 @@ const calculateAge = (dateOfBirth) => {
   const today = new Date();
   let age = today.getFullYear() - dob.getFullYear();
   const monthDiff = today.getMonth() - dob.getMonth();
-
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
-    age -= 1;
-  }
-
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) age -= 1;
   return age;
 };
 
 const ProfileCard = ({ profile, onInterest, actionLabel = "Send Interest", actionDisabled = false }) => {
-  // Paid users: full profile has dateOfBirth — compute age from it.
-  // Unpaid / teaser: stripped profile has age (number) pre-computed by the backend.
+  // Paid users: full profile has dateOfBirth → compute age. Teaser: age is pre-computed.
   const age = typeof profile.age === "number" ? profile.age : calculateAge(profile.dateOfBirth);
+  const location = [profile.city, profile.state].filter(Boolean).join(", ") || "India";
+
+  // Only show facts that actually exist; location always shows.
+  const facts = [
+    profile.religion   && { icon: "🛕", text: profile.religion },
+    profile.education  && { icon: "🎓", text: profile.education },
+    profile.profession && { icon: "💼", text: profile.profession },
+    { icon: "📍", text: location }
+  ].filter(Boolean);
 
   return (
     <article className="profile-card">
@@ -26,37 +30,35 @@ const ProfileCard = ({ profile, onInterest, actionLabel = "Send Interest", actio
           src={profile.profilePhoto || "https://placehold.co/700x880/fdeef4/c2185b?text=PremSetu"}
           alt={profile.fullName}
         />
-        <span className="profile-card-badge">{profile.isProfileComplete ? "Profile complete" : "New profile"}</span>
+        <span className={`profile-card-badge${profile.isProfileComplete ? " is-verified" : ""}`}>
+          {profile.isProfileComplete ? "✓ Verified" : "New"}
+        </span>
+        <div className="profile-card-overlay">
+          <h3>{profile.fullName}</h3>
+          <p>{age === "--" ? "Age —" : `${age} years`}</p>
+        </div>
       </div>
 
       <div className="profile-card-content">
-        <div className="profile-name-row">
-          <div>
-            <h3>{profile.fullName}</h3>
-            <p className="profile-meta-line">
-              {age} yrs | {profile.city || "India"}
-            </p>
-          </div>
-          <span className="chip">{profile.motherTongue || "Family values"}</span>
-        </div>
-
-        <div className="profile-detail-grid">
-          <span>{profile.religion || "Open minded profile"}</span>
-          <span>{profile.education || "Education not added yet"}</span>
-          <span>{profile.profession || "Profession not added yet"}</span>
-        </div>
-
-        <div className="chip-row">
-          <span className="chip">{profile.state || "Across India"}</span>
-          <span className="chip">{profile.maritalStatus || "Never married"}</span>
-        </div>
+        <ul className="profile-facts">
+          {facts.map((f, i) => (
+            <li key={i}>
+              <span className="profile-fact-icon">{f.icon}</span>
+              <span className="profile-fact-text">{f.text}</span>
+            </li>
+          ))}
+        </ul>
 
         <div className="card-actions">
-          <button className="primary-button" onClick={() => onInterest?.(profile._id)} disabled={actionDisabled}>
-            {actionLabel}
+          <button
+            className="primary-button"
+            onClick={() => onInterest?.(profile._id)}
+            disabled={actionDisabled}
+          >
+            ♥ {actionLabel}
           </button>
-          <Link className="secondary-button" to={`/profile/${profile._id}`}>
-            View Profile
+          <Link className="ghost-button" to={`/profile/${profile._id}`}>
+            View
           </Link>
         </div>
       </div>

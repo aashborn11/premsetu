@@ -17,20 +17,6 @@ const DAYS = Array.from({ length: 31 }, (_, i) => String(i + 1).padStart(2, "0")
 const CY = new Date().getFullYear();
 const YEARS = Array.from({ length: 55 }, (_, i) => String(CY - 18 - i));
 
-const dropStyle = {
-  width: "100%",
-  padding: "13px 12px",
-  border: "1.5px solid #e7e3de",
-  borderRadius: 14,
-  background: "#fff",
-  color: "#1c1917",
-  font: "inherit",
-  fontSize: "0.95rem",
-  outline: "none",
-  cursor: "pointer",
-  transition: "border-color 0.2s ease, box-shadow 0.2s ease"
-};
-
 const Register = () => {
   const [form, setForm] = useState({
     fullName: "", email: "", password: "", phone: "", gender: "female"
@@ -185,16 +171,16 @@ const Register = () => {
             <div className="field-stack" style={{ gridColumn: "1 / -1" }}>
               <span>Date of Birth</span>
               <small>Select day, month and year separately</small>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr 1fr", gap: 10 }}>
-                <select value={dobDay} onChange={e => setDobDay(e.target.value)} style={dropStyle}>
+              <div className="dob-grid">
+                <select value={dobDay} onChange={e => setDobDay(e.target.value)}>
                   <option value="">Day</option>
                   {DAYS.map(d => <option key={d} value={d}>{parseInt(d)}</option>)}
                 </select>
-                <select value={dobMonth} onChange={e => setDobMonth(e.target.value)} style={dropStyle}>
+                <select value={dobMonth} onChange={e => setDobMonth(e.target.value)}>
                   <option value="">Month</option>
                   {MONTHS.map(m => <option key={m.v} value={m.v}>{m.l}</option>)}
                 </select>
-                <select value={dobYear} onChange={e => setDobYear(e.target.value)} style={dropStyle}>
+                <select value={dobYear} onChange={e => setDobYear(e.target.value)}>
                   <option value="">Year</option>
                   {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
                 </select>
