@@ -148,6 +148,15 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false
     },
+    paidAt: {
+      type: Date,
+      default: null
+    },
+    paymentRef: {
+      type: String,
+      trim: true,
+      default: ""
+    },
     interestedIn: [
       {
         type: mongoose.Schema.Types.ObjectId,

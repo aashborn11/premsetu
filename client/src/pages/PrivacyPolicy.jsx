@@ -55,8 +55,9 @@ const PrivacyPolicy = () => (
         </li>
         <li>
           <strong>Payment information:</strong> We do not store card or bank
-          details. Payment is processed by Razorpay; we retain only the order
-          ID, payment ID, and status (paid / not paid).
+          details. Payment is made directly via UPI; we retain only the UPI
+          transaction reference you provide and your membership status
+          (paid / not paid).
         </li>
         <li>
           <strong>Messages:</strong> Text messages sent between users through
@@ -159,10 +160,10 @@ const PrivacyPolicy = () => (
           bound by applicable data protection standards.
         </li>
         <li>
-          <strong>Razorpay:</strong> Payment processing. Razorpay may collect
-          and process your payment details under its own privacy policy. We
-          encourage you to review Razorpay's privacy policy before completing
-          a payment.
+          <strong>UPI apps:</strong> Payments are made through your own UPI
+          app (PhonePe, Google Pay, Paytm, etc.), which processes your payment
+          details under its own privacy policy. We encourage you to review
+          your UPI app's privacy policy before completing a payment.
         </li>
         <li>
           <strong>Legal authorities:</strong> If required by law, court order,

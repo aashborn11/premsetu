@@ -83,7 +83,7 @@ router.get("/suggestions", optionalAuth, async (req, res) => {
     const skip = (pageNumber - 1) * pageLimit;
 
     const [users, total] = await Promise.all([
-      User.find(query).select("-password").sort({ createdAt: -1 }).skip(skip).limit(pageLimit),
+      User.find(query).select("-password -paymentRef -paidAt").sort({ createdAt: -1 }).skip(skip).limit(pageLimit),
       User.countDocuments(query)
     ]);
 
@@ -179,7 +179,7 @@ router.post("/interest/:id", authMiddleware, async (req, res) => {
 router.get("/interests-received", authMiddleware, async (req, res) => {
   try {
     const user = await User.findById(req.userId)
-      .populate("interestedBy", "-password")
+      .populate("interestedBy", "-password -paymentRef -paidAt")
       .select("interestedBy");
 
     return res.json({ users: user?.interestedBy || [] });
@@ -191,7 +191,7 @@ router.get("/interests-received", authMiddleware, async (req, res) => {
 router.get("/interests-sent", authMiddleware, async (req, res) => {
   try {
     const user = await User.findById(req.userId)
-      .populate("interestedIn", "-password")
+      .populate("interestedIn", "-password -paymentRef -paidAt")
       .select("interestedIn");
 
     return res.json({ users: user?.interestedIn || [] });
@@ -203,7 +203,7 @@ router.get("/interests-sent", authMiddleware, async (req, res) => {
 router.get("/my-matches", authMiddleware, async (req, res) => {
   try {
     const user = await User.findById(req.userId)
-      .populate("matches", "-password")
+      .populate("matches", "-password -paymentRef -paidAt")
       .select("matches");
 
     return res.json({ users: user?.matches || [] });

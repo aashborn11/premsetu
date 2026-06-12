@@ -1,10 +1,15 @@
 import { useState } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { QRCodeSVG } from "qrcode.react";
 import { useAuth } from "../context/AuthContext";
 import api from "../utils/axios";
-import { loadRazorpayScript, openRazorpayCheckout } from "../utils/razorpay";
 import { Mandala } from "../components/Festive";
+import {
+  PAYMENT,
+  PAYMENT_IS_PLACEHOLDER,
+  UPI_PAY_LINK
+} from "../config";
 
 const FEATURES = [
   {
@@ -24,102 +29,56 @@ const FEATURES = [
   }
 ];
 
-// Payment status machine
-// idle → loading (creating order) → verifying (after Razorpay callback) → done
-// Any error branch: failed | dismissed
-const STATUS = {
-  IDLE:       "idle",
-  LOADING:    "loading",
-  VERIFYING:  "verifying",
-  FAILED:     "failed",
-  DISMISSED:  "dismissed"
-};
+const PAY_STEPS = [
+  { icon: "📱", text: "Scan the QR with any UPI app — PhonePe, GPay, Paytm" },
+  { icon: "💸", text: "Pay the membership amount shown below" },
+  { icon: "✅", text: "Tap “I Have Paid” and start browsing instantly" }
+];
 
 const Membership = () => {
   const { user, refreshUser } = useAuth();
   const navigate = useNavigate();
-  const [status, setStatus] = useState(STATUS.IDLE);
+  const [confirming, setConfirming] = useState(false);
+  const [txnId, setTxnId] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
-  const [orderAmount, setOrderAmount] = useState(null); // paise from API
 
   // Already paid → no reason to be here
   if (user?.isPaid) {
     return <Navigate to="/matches" replace />;
   }
 
-  const displayPrice = orderAmount
-    ? `₹${(orderAmount / 100).toLocaleString("en-IN")}`
-    : "₹499";
+  const displayPrice = `₹${PAYMENT.AMOUNT_RUPEES.toLocaleString("en-IN")}`;
 
-  const isProcessing =
-    status === STATUS.LOADING || status === STATUS.VERIFYING;
-
-  const handlePay = async () => {
-    setStatus(STATUS.LOADING);
-    setErrorMsg("");
-
+  const handleCopyUpi = async () => {
     try {
-      // ── Step 1: create Razorpay order on backend ───────────────────────
-      const { data: order } = await api.post("/payment/create-order");
-      setOrderAmount(order.amount);
-
-      // ── Step 2: load script + open Razorpay checkout modal ─────────────
-      await loadRazorpayScript();
-
-      const paymentResponse = await openRazorpayCheckout({
-        key:         order.keyId,
-        amount:      order.amount,    // paise — Razorpay expects paise
-        currency:    order.currency,
-        name:        "PremSetu",
-        description: "Membership — Full Profile Access",
-        order_id:    order.orderId,
-        prefill: {
-          name:    user?.fullName  || "",
-          email:   user?.email     || "",
-          contact: user?.phone     || ""
-        },
-        theme: { color: "#7c2d12" }   // brick-red brand colour
-      });
-
-      // ── Step 3: verify HMAC signature on backend ────────────────────────
-      // NEVER mark paid from the Razorpay callback alone — always verify.
-      setStatus(STATUS.VERIFYING);
-
-      const { data: verifyData } = await api.post("/payment/verify", {
-        razorpay_order_id:   paymentResponse.razorpay_order_id,
-        razorpay_payment_id: paymentResponse.razorpay_payment_id,
-        razorpay_signature:  paymentResponse.razorpay_signature
-      });
-
-      if (verifyData.success) {
-        // ── Step 4: update auth state then redirect ────────────────────────
-        await refreshUser();
-        toast.success("🎉 Membership confirmed! Welcome to PremSetu.");
-        navigate("/matches");
-      } else {
-        setStatus(STATUS.FAILED);
-        setErrorMsg(verifyData.message || "Payment could not be verified. Please try again.");
-      }
-    } catch (err) {
-      if (err.message === "dismissed") {
-        setStatus(STATUS.DISMISSED);
-      } else {
-        setStatus(STATUS.FAILED);
-        setErrorMsg(
-          err.response?.data?.message ||
-          err.message ||
-          "Something went wrong with the payment. Please try again."
-        );
-      }
+      await navigator.clipboard.writeText(PAYMENT.UPI_ID);
+      toast.success("UPI ID copied!");
+    } catch {
+      toast.error("Could not copy. Long-press the ID to copy manually.");
     }
   };
 
-  const buttonLabel = () => {
-    switch (status) {
-      case STATUS.LOADING:   return "Creating order...";
-      case STATUS.VERIFYING: return "Verifying payment...";
-      case STATUS.FAILED:    return `Try Again — ${displayPrice}`;
-      default:               return `Get Membership — ${displayPrice}`;
+  const handleConfirm = async () => {
+    setConfirming(true);
+    setErrorMsg("");
+    try {
+      const { data } = await api.post("/payment/confirm", {
+        txnId: txnId.trim()
+      });
+      if (data.success) {
+        await refreshUser();
+        toast.success("🎉 Membership activated! Welcome to PremSetu.");
+        navigate("/matches");
+      } else {
+        setErrorMsg(data.message || "Could not activate membership. Please try again.");
+      }
+    } catch (err) {
+      setErrorMsg(
+        err.response?.data?.message ||
+        "Something went wrong. Please try again or contact us."
+      );
+    } finally {
+      setConfirming(false);
     }
   };
 
@@ -148,9 +107,15 @@ const Membership = () => {
         ))}
       </div>
 
-      {/* ── CTA box ──────────────────────────────────────────────── */}
+      {/* ── Payment box ──────────────────────────────────────────── */}
       <div className="membership-cta-box">
         <Mandala className="membership-mandala" />
+
+        {PAYMENT_IS_PLACEHOLDER && (
+          <div className="membership-placeholder-warning">
+            ⚠ Demo payment details — the real UPI ID will be added before launch.
+          </div>
+        )}
 
         <div className="membership-price-row">
           <span className="membership-price shimmer-text">{displayPrice}</span>
@@ -159,49 +124,109 @@ const Membership = () => {
           </span>
         </div>
 
-        {/* What's included */}
-        <ul className="membership-checklist">
-          {[
-            "See full profiles & contact details",
-            "Send unlimited interests",
-            "Personal matchmaker support",
-            "Kundli matching (coming soon)"
-          ].map((item) => (
-            <li key={item}><span className="membership-check">✓</span>{item}</li>
+        {/* How to pay */}
+        <ol className="membership-pay-steps">
+          {PAY_STEPS.map((s) => (
+            <li key={s.text}>
+              <span className="membership-pay-step-icon">{s.icon}</span>
+              {s.text}
+            </li>
           ))}
-        </ul>
+        </ol>
 
-        {/* Soft dismissal message */}
-        {status === STATUS.DISMISSED && (
-          <div className="membership-soft-prompt">
-            Payment cancelled — no problem. Whenever you're ready, complete it
-            below for full access. Your account is safe.
+        {/* QR + UPI details */}
+        <div className="membership-qr-row">
+          <div className="membership-qr-frame">
+            {PAYMENT.QR_IMAGE ? (
+              <img
+                src={`${process.env.PUBLIC_URL}${PAYMENT.QR_IMAGE}`}
+                alt="UPI payment QR code"
+                className="membership-qr-img"
+              />
+            ) : (
+              <QRCodeSVG
+                value={UPI_PAY_LINK}
+                size={188}
+                level="M"
+                marginSize={2}
+                title="UPI payment QR code"
+              />
+            )}
+            <span className="membership-qr-caption">Scan with any UPI app</span>
           </div>
-        )}
 
-        {/* Hard failure message */}
-        {status === STATUS.FAILED && errorMsg && (
-          <div className="membership-error-prompt">
-            ⚠ {errorMsg}
+          <div className="membership-upi-details">
+            <span className="membership-upi-label">Or pay directly to UPI ID</span>
+            <div className="membership-upi-id-row">
+              <code className="membership-upi-id">{PAYMENT.UPI_ID}</code>
+              <button
+                type="button"
+                className="ghost-button membership-copy-btn"
+                onClick={handleCopyUpi}
+              >
+                Copy
+              </button>
+            </div>
+
+            <a href={UPI_PAY_LINK} className="secondary-button membership-upi-app-btn">
+              📲 Pay {displayPrice} in UPI App
+            </a>
+            {PAYMENT.PHONEPE_LINK && (
+              <a
+                href={PAYMENT.PHONEPE_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="secondary-button membership-upi-app-btn"
+              >
+                💜 Pay via PhonePe Link
+              </a>
+            )}
+            <span className="membership-upi-hint">
+              The app buttons work on mobile. On a computer, scan the QR with your phone.
+            </span>
           </div>
-        )}
+        </div>
 
-        <button
-          className="primary-button membership-pay-btn"
-          onClick={handlePay}
-          disabled={isProcessing}
-        >
-          {buttonLabel()}
-        </button>
+        {/* Confirm after paying */}
+        <div className="membership-confirm-block">
+          <label className="membership-txn-label" htmlFor="membership-txn">
+            UPI Transaction / UTR ID <span className="membership-txn-optional">(optional, helps us verify faster)</span>
+          </label>
+          <input
+            id="membership-txn"
+            type="text"
+            className="membership-txn-input"
+            placeholder="e.g. 415212345678"
+            value={txnId}
+            maxLength={60}
+            onChange={(e) => setTxnId(e.target.value)}
+          />
+
+          {errorMsg && (
+            <div className="membership-error-prompt">⚠ {errorMsg}</div>
+          )}
+
+          <button
+            className="primary-button membership-pay-btn"
+            onClick={handleConfirm}
+            disabled={confirming}
+          >
+            {confirming ? "Activating..." : `✅ I Have Paid ${displayPrice}`}
+          </button>
+          <span className="membership-confirm-note">
+            Payments are checked against our bank records. False confirmations
+            lead to account suspension.
+          </span>
+        </div>
 
         <div className="membership-trust-pills">
-          <span className="membership-pill">🔒 100% Secure</span>
+          <span className="membership-pill">🔒 100% Secure UPI</span>
           <span className="membership-pill">♾️ Lifetime Access</span>
           <a href="/refund" className="membership-pill membership-pill-link">↩️ Refund Policy</a>
         </div>
 
         <p className="membership-secure-note">
-          🔒 Secured by Razorpay · UPI, Cards, Net Banking &amp; Wallets accepted
+          🔒 Pay securely with PhonePe, Google Pay, Paytm or any UPI app
         </p>
       </div>
 

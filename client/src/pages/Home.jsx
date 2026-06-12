@@ -1,5 +1,8 @@
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import api from "../utils/axios";
+import ProfileCard from "../components/ProfileCard";
 import { FiligreeDivider, Mandala } from "../components/Festive";
 import { PremSetuMark } from "../components/Logo";
 
@@ -28,8 +31,45 @@ const whyFeatures = [
   { icon: "🔮", title: "Kundli Matching", text: "Horoscope match, coming soon." }
 ];
 
+const faqs = [
+  {
+    q: "Is registration really free?",
+    a: "Yes. Creating your profile, browsing previews, and receiving interests is completely free. A one-time ₹499 membership unlocks full profiles and contact details — lifetime, no renewals."
+  },
+  {
+    q: "How do I pay for the membership?",
+    a: "Pay with any UPI app — PhonePe, Google Pay, or Paytm. Scan the QR code on the Membership page, confirm on the site, and your account is upgraded instantly."
+  },
+  {
+    q: "Is my personal information safe?",
+    a: "Your phone number and full details are only visible to paid, verified members. Logged-out visitors see just a name, age, and city. Read our Privacy Policy for the full picture."
+  },
+  {
+    q: "Which communities can join PremSetu?",
+    a: "Every community across India — Hindu, Muslim, Sikh, Christian, Jain, and more. PremSetu is built for all Indian families, in every state."
+  },
+  {
+    q: "How do matches work?",
+    a: "Browse profiles with filters for religion, language, location, diet and more. Send an interest — when it's mutual, you're matched and can take the rishta forward."
+  }
+];
+
 const Home = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const [teaser, setTeaser] = useState([]);
+
+  // Public teaser — real profiles for logged-out visitors (public fields only)
+  useEffect(() => {
+    if (user) return;
+    let cancelled = false;
+    api.get("/matches/suggestions")
+      .then(({ data }) => {
+        if (!cancelled) setTeaser((data.users || []).slice(0, 6));
+      })
+      .catch(() => null);
+    return () => { cancelled = true; };
+  }, [user]);
 
   return (
     <main>
@@ -129,6 +169,31 @@ const Home = () => {
         </div>
       </section>
 
+      {/* ── 3.7 PROFILE TEASER — logged-out visitors only ── */}
+      {!user && teaser.length > 0 && (
+        <section className="home-section home-teaser-section">
+          <div className="home-section-heading">
+            <span className="eyebrow">🪔 Meet Our Members</span>
+            <h2>Real profiles, waiting to connect.</h2>
+          </div>
+          <div className="cards-grid fest-stagger">
+            {teaser.map((profile) => (
+              <ProfileCard
+                key={profile._id}
+                profile={profile}
+                onInterest={() => navigate("/register")}
+                actionLabel="Join to Connect"
+              />
+            ))}
+          </div>
+          <div className="home-teaser-cta">
+            <Link to="/register" className="primary-button">
+              Create Free Profile to See More
+            </Link>
+          </div>
+        </section>
+      )}
+
       <FiligreeDivider className="home-section-divider" />
 
       {/* ── 4. FEATURED QUOTE ── */}
@@ -142,6 +207,22 @@ const Home = () => {
           <p className="home-quote-credit">
             — Kavita &amp; Arjun P., Lucknow · Married 2025
           </p>
+        </div>
+      </section>
+
+      {/* ── 4.5 FAQ ── */}
+      <section className="home-section home-faq-section">
+        <div className="home-section-heading">
+          <span className="eyebrow">🪔 Common Questions</span>
+          <h2>Everything families ask us.</h2>
+        </div>
+        <div className="home-faq-list">
+          {faqs.map((f) => (
+            <details key={f.q} className="home-faq-item">
+              <summary>{f.q}</summary>
+              <p>{f.a}</p>
+            </details>
+          ))}
         </div>
       </section>
 

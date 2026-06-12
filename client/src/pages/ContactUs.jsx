@@ -51,7 +51,7 @@ const ContactUs = () => (
         <ContactCard label="Payment & Refund Queries">
           <a href="mailto:officialpremsetu@gmail.com">officialpremsetu@gmail.com</a>
           <br />
-          Include your Razorpay payment ID and registered email in your
+          Include your UPI transaction (UTR) ID and registered email in your
           message.
         </ContactCard>
       </div>

@@ -9,7 +9,7 @@ Guidance for Claude Code when working in this repository.
 Built bilingual-friendly for users with basic English. The goal is a simple, warm,
 trustworthy matchmaking experience for every Indian family.
 
-**Stack:** React (CRA) frontend · Node.js/Express backend · MongoDB Atlas · Socket.IO (realtime chat) · Cloudinary (photo uploads) · Razorpay (payments)
+**Stack:** React (CRA) frontend · Node.js/Express backend · MongoDB Atlas · Socket.IO (realtime chat) · Cloudinary (photo uploads) · Manual UPI payments (QR + PhonePe link, no gateway)
 
 ## Live URLs
 
@@ -85,12 +85,8 @@ back to the clean form after pushing so the token isn't stored in git config.
 | `CLIENT_URL` / `CLIENT_URLS` | Allowed CORS origins (comma-separated) |
 | `CLOUDINARY_*` | Cloudinary upload credentials |
 | `ALLOW_IN_MEMORY_DB` | `true` in dev if no Atlas URI; `false` in prod |
-| `RAZORPAY_KEY_ID` | Razorpay API key (test: `rzp_test_…`, live: `rzp_live_…`) |
-| `RAZORPAY_KEY_SECRET` | Razorpay secret for HMAC-SHA256 signature verification |
-| `MEMBERSHIP_AMOUNT_PAISE` | Price in paise — `49900` = ₹499 (team adjusts this) |
 
-> **Razorpay test keys** are set in `server/.env` locally. `server/.env` is in `.gitignore`
-> (line 5) — never committed. Real keys live in Render dashboard env vars.
+> Razorpay was removed in June 2026 — payments are now manual UPI (no gateway keys needed).
 
 ## Conventions
 
@@ -133,8 +129,10 @@ back to the clean form after pushing so the token isn't stored in git config.
   `YYYY-MM-DD` before submit. Do NOT revert to a single `<input type="date">`.
 - **Lint:** CRA build fails on unused vars / unused components. Run a local
   `npx react-scripts build` in `client/` before deploying to catch lint errors early.
-- **Razorpay key:** NEVER hardcode in frontend. The `keyId` always comes from the
-  `/api/payment/create-order` response. The secret stays server-side only.
+- **Payment details (UPI):** All payment display values (UPI ID, payee name, PhonePe link,
+  amount) live in `client/src/config.js` under `PAYMENT` — the ONLY place to change them.
+  While `UPI_ID` is the placeholder `premsetu@upi`, the Membership page shows a yellow
+  "demo payment details" banner automatically.
 
 ## Feature flags (`client/src/config.js`)
 
@@ -283,27 +281,29 @@ Everything else: `phone`, `email`, `dateOfBirth`, `religion`, `caste`, `motherTo
 
 Blank / "Any" value → param is empty string → `if (field)` is falsy → filter not applied.
 
-## Payment flow (`server/routes/payment.js`)
+## Payment flow — manual UPI (`server/routes/payment.js`)
 
-### `POST /api/payment/create-order` (auth required)
+Razorpay was fully removed (June 2026). Payment is a manual UPI flow:
+
+### `POST /api/payment/confirm` (auth required)
 - Returns 400 `"Already a member."` if `user.isPaid === true`
-- Creates Razorpay order → returns `{ orderId, amount, currency, keyId }`
+- Accepts optional `{ txnId }` (user-typed UPI/UTR reference, trimmed to 60 chars)
+- Sets `isPaid = true`, `paidAt = now`, `paymentRef = txnId || "self-confirmed"`
+- ⚠ **Trust model:** activation is self-declared ("I have paid" click). Payments must be
+  reconciled manually against the bank/UPI statement using `paymentRef` + `paidAt`.
+  `paymentRef`/`paidAt` are excluded from every route that returns other users' profiles.
 
-### `POST /api/payment/verify` (auth required)
-- Receives `{ razorpay_order_id, razorpay_payment_id, razorpay_signature }`
-- Verifies HMAC-SHA256: `sign(order_id + "|" + payment_id, KEY_SECRET)`
-- **Only** sets `isPaid = true` if signature is valid — never on frontend signal alone
-- Invalid signature → 400 `{ success: false, message: "Payment verification failed." }`
+### Frontend flow (`client/src/pages/Membership.jsx`)
+1. Page renders a **live UPI QR code** (generated from `PAYMENT.UPI_ID` in `config.js`
+   via `qrcode.react`) + copyable UPI ID + `upi://pay` deep-link button (mobile)
+   + optional PhonePe link button (shown only if `PAYMENT.PHONEPE_LINK` is set)
+2. User pays in their UPI app, optionally types the UTR ID
+3. "✅ I Have Paid ₹499" → `POST /payment/confirm` → `refreshUser()` → `/matches`
+4. To use a custom QR image instead of the generated one: drop it at
+   `client/public/payment-qr.png` and set `PAYMENT.QR_IMAGE = "/payment-qr.png"`
 
-### Frontend flow (`client/src/utils/razorpay.js`)
-1. `POST /api/payment/create-order` → get `{ orderId, amount, currency, keyId }`
-2. `loadRazorpayScript()` → lazy-loads `checkout.js` once per session
-3. `openRazorpayCheckout({ key: keyId, amount, currency, order_id: orderId, … })`
-   → resolves with `{ razorpay_order_id, razorpay_payment_id, razorpay_signature }`
-4. `POST /api/payment/verify` with those three values
-5. On `success: true` → `refreshUser()` → navigate to `/matches`
-6. On dismiss → show Hinglish retry prompt, no access granted
-7. On failure → show error message, no access granted
+### E2E regression test
+`server/e2e-upi.js` — run `node e2e-upi.js` with the dev server up (9 checks).
 
 ## Registration & onboarding flow
 
@@ -481,17 +481,22 @@ thoughtful matchmaking with the warmth of tradition and the clarity you deserve.
 
 ## Open items / next steps
 
-- **Legal placeholders:** Fill in legal entity name, address, emails, phone, Grievance Officer,
-  jurisdiction in all four policy pages. Have a lawyer review before go-live.
-- **Logo choice:** Confirm Logo A ("The Arch") or Logo B ("The Torana")
+- **⚠ REAL UPI DETAILS (launch blocker):** Replace `PAYMENT.UPI_ID` placeholder
+  (`premsetu@upi`) in `client/src/config.js` with the real UPI ID. Optionally add
+  `PHONEPE_LINK`. The demo-banner on the Membership page disappears automatically.
+- **Payment reconciliation routine:** Self-declared activation means the team must check
+  new paid accounts against the UPI/bank statement (match `paymentRef` + `paidAt`).
+- **Lawyer review:** Legal pages have real business details but should still be reviewed.
 - **Real testimonials:** Replace placeholder quote with real success story when available
-- **Navbar "Membership" link:** Show "Become a Member" in nav for logged-in unpaid users
-- **Dashboard paywall nudge:** Show an upgrade banner on the dashboard for unpaid users
-  instead of silent stripped preview cards
-- **Home-page teaser:** Wire the public `/matches/suggestions` teaser to the Home page
-  hero/bottom section so logged-out visitors see real profile cards
 - **HelpBot → AI upgrade:** When ready, swap `getBotReply()` in `utils/botReply.js` with
   an async function calling your AI API — no other file changes needed
 - **Re-enable chat:** Set `CHAT_ENABLED = true` in `client/src/config.js` when scaling
 - **Phase 3 ideas:** Height as normalized cm integer (enables range filter), advanced
   kundli/gun-milan matching, profile completeness nudges, photo gallery, demo login
+
+### Done June 2026 (UPI launch sprint)
+- Razorpay fully removed → manual UPI flow (QR + deep link + PhonePe link + self-confirm)
+- Navbar "✨ Become a Member" CTA for logged-in unpaid users
+- Dashboard upgrade banner for unpaid users
+- Home page: real-profile teaser for logged-out visitors (public suggestions API) + FAQ accordion
+- Legal pages reworded for UPI; `e2e-upi.js` regression test (9/9)

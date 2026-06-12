@@ -53,7 +53,7 @@ export function getBotReply(raw) {
   ) {
     return {
       text:
-        "Membership is just ₹499 — a one-time payment, no monthly fees. " +
+        "Membership is just ₹499 — a one-time UPI payment (PhonePe, GPay, Paytm), no monthly fees. " +
         "It unlocks full profile details, contact information, and messaging.",
     };
   }

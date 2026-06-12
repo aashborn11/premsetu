@@ -139,6 +139,21 @@ const Dashboard = () => {
         </aside>
       </div>
 
+      {user && !user.isPaid && (
+        <div className="dashboard-upgrade-banner">
+          <div className="dashboard-upgrade-text">
+            <strong>✨ Unlock full profiles &amp; contact details</strong>
+            <span>
+              One-time ₹499 · lifetime access · see religion, education,
+              profession and phone numbers of every match.
+            </span>
+          </div>
+          <Link to="/membership" className="primary-button dashboard-upgrade-btn">
+            Become a Member
+          </Link>
+        </div>
+      )}
+
       <div className="stats-grid small fest-stagger">
         <article className="stat-card">
           <span className="stat-icon">✉️</span>

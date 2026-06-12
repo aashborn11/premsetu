@@ -1271,10 +1271,144 @@ p { margin: 0; }
   margin: 0;
 }
 
+/* ── Manual UPI payment elements ── */
+.membership-placeholder-warning {
+  background: #fff7e0;
+  border: 1px dashed #d9a514;
+  border-radius: 14px;
+  padding: 12px 16px;
+  font-size: 0.85rem;
+  color: #8a6605;
+  font-weight: 700;
+}
+
+.membership-pay-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+  text-align: left;
+}
+.membership-pay-steps li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.92rem;
+  color: var(--ink-soft, #444);
+  font-weight: 600;
+}
+.membership-pay-step-icon { font-size: 1.15rem; }
+
+.membership-qr-row {
+  display: flex;
+  gap: 28px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 18px 0 6px;
+}
+.membership-qr-frame {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid var(--gold-border, #e7cf9a);
+  border-radius: 18px;
+  padding: 18px 18px 14px;
+  box-shadow: 0 10px 26px rgba(194, 24, 91, 0.10);
+}
+.membership-qr-img { width: 188px; height: 188px; object-fit: contain; }
+.membership-qr-caption {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--muted-soft);
+}
+
+.membership-upi-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  max-width: 320px;
+  text-align: left;
+}
+.membership-upi-label {
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted-soft);
+}
+.membership-upi-id-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+.membership-upi-id {
+  background: var(--gold-tint, #fdf6e3);
+  border: 1px solid var(--gold-border, #e7cf9a);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--primary, #c2185b);
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+.membership-copy-btn { padding: 9px 16px; flex-shrink: 0; }
+.membership-upi-app-btn { width: 100%; text-align: center; }
+.membership-upi-hint {
+  font-size: 0.78rem;
+  color: var(--muted-soft);
+  line-height: 1.5;
+}
+
+.membership-confirm-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px dashed var(--gold-border, #e7cf9a);
+  padding-top: 20px;
+  text-align: left;
+}
+.membership-txn-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink-soft, #444);
+}
+.membership-txn-optional {
+  font-weight: 500;
+  color: var(--muted-soft);
+}
+.membership-txn-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+.membership-txn-input:focus {
+  outline: none;
+  border-color: var(--primary, #c2185b);
+  box-shadow: 0 0 0 3px rgba(194, 24, 91, 0.12);
+}
+.membership-confirm-note {
+  font-size: 0.76rem;
+  color: var(--muted-soft);
+  line-height: 1.5;
+  text-align: center;
+}
+
 /* Responsive */
 @media (max-width: 860px) {
   .membership-features { grid-template-columns: 1fr; }
   .membership-cta-box  { padding: 28px 20px; }
+  .membership-qr-row   { flex-direction: column; gap: 18px; }
+  .membership-upi-details { max-width: 100%; align-items: stretch; }
 }
 
 .pagination-row {
@@ -3139,4 +3273,111 @@ p { margin: 0; }
 .nav-link.active {
   position: relative;
   background: var(--primary-tint);
+}
+
+/* ===========================
+   LAUNCH POLISH — membership nudges, home teaser, FAQ
+=========================== */
+
+/* Navbar "Become a Member" CTA */
+.nav-member-cta {
+  background: var(--brand-gradient, linear-gradient(90deg, #c2185b, #f57c00));
+  color: #fff !important;
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-weight: 700;
+}
+.nav-member-cta:hover { opacity: 0.92; }
+.nav-member-cta.active { background: var(--brand-gradient, linear-gradient(90deg, #c2185b, #f57c00)); }
+
+/* Dashboard upgrade banner */
+.dashboard-upgrade-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  background: linear-gradient(110deg, #fdeef4 0%, #fff4e5 100%);
+  border: 1px solid var(--gold-border, #e7cf9a);
+  border-radius: 18px;
+  padding: 20px 24px;
+  margin: 22px 0;
+}
+.dashboard-upgrade-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.dashboard-upgrade-text strong {
+  font-size: 1.05rem;
+  color: var(--primary, #c2185b);
+}
+.dashboard-upgrade-text span {
+  font-size: 0.88rem;
+  color: var(--muted-soft, #777);
+  line-height: 1.5;
+}
+.dashboard-upgrade-btn { flex-shrink: 0; }
+
+/* Home teaser CTA under profile cards */
+.home-teaser-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+/* Home FAQ accordion */
+.home-faq-list {
+  max-width: 760px;
+  margin: 0 auto;
+  display: grid;
+  gap: 12px;
+}
+.home-faq-item {
+  background: #fff;
+  border: 1px solid rgba(194, 24, 91, 0.14);
+  border-radius: 14px;
+  padding: 0;
+  overflow: hidden;
+  transition: box-shadow 0.25s ease;
+}
+.home-faq-item[open] {
+  box-shadow: 0 12px 30px rgba(194, 24, 91, 0.08);
+  border-color: var(--gold-border, #e7cf9a);
+}
+.home-faq-item summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 16px 20px;
+  font-weight: 700;
+  font-size: 0.98rem;
+  color: var(--ink, #2a2a2a);
+  position: relative;
+  padding-right: 44px;
+}
+.home-faq-item summary::-webkit-details-marker { display: none; }
+.home-faq-item summary::after {
+  content: "+";
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--primary, #c2185b);
+  transition: transform 0.25s ease;
+}
+.home-faq-item[open] summary::after {
+  content: "−";
+}
+.home-faq-item p {
+  margin: 0;
+  padding: 0 20px 18px;
+  font-size: 0.92rem;
+  line-height: 1.7;
+  color: var(--muted-soft, #666);
+}
+
+@media (max-width: 640px) {
+  .dashboard-upgrade-banner { flex-direction: column; align-items: stretch; text-align: center; }
 }

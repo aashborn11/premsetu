@@ -42,7 +42,7 @@ const Footer = () => (
     <div className="footer-bottom">
       <span>© {new Date().getFullYear()} PremSetu. All rights reserved.</span>
       <span className="footer-bottom-mid">Made with <span className="footer-heart">♥</span> in India 🇮🇳</span>
-      <span>🔒 Secure payments by Razorpay</span>
+      <span>🔒 Secure UPI payments</span>
     </div>
 
   </footer>

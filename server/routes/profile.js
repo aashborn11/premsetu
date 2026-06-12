@@ -220,7 +220,7 @@ router.get("/:id", optionalAuth, async (req, res) => {
       return res.status(400).json({ message: "Invalid profile id." });
     }
 
-    const profileUser = await User.findById(req.params.id).select("-password");
+    const profileUser = await User.findById(req.params.id).select("-password -paymentRef -paidAt");
     if (!profileUser) {
       return res.status(404).json({ message: "Profile not found." });
     }

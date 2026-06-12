@@ -102,6 +102,11 @@ const Navbar = () => {
                 )}
                 {/* Dashboard is always last */}
                 <NavLink to="/dashboard" className={navCls}>Dashboard</NavLink>
+                {!user.isPaid && (
+                  <NavLink to="/membership" className="nav-link nav-member-cta">
+                    ✨ Become a Member
+                  </NavLink>
+                )}
               </>
             )}
           </div>

@@ -91,8 +91,8 @@ const TermsAndConditions = () => (
           the time of purchase and is inclusive of applicable taxes.
         </li>
         <li>
-          Payments are processed securely through Razorpay. PremSetu does not
-          store your card or bank details.
+          Payments are made via UPI (PhonePe, Google Pay, Paytm, or any UPI
+          app). PremSetu does not store your card or bank details.
         </li>
         <li>
           Your membership is for personal use only and is non-transferable.

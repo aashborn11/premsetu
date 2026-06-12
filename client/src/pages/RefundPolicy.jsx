@@ -1,6 +1,5 @@
-// TEMPLATE — Must be reviewed and approved by a qualified Indian lawyer
-// before going live. Replace all placeholders with real business details.
-// Razorpay KYC requires a clear, unambiguous refund/cancellation policy.
+// Must be reviewed and approved by a qualified Indian lawyer before relying
+// on it for live payments.
 
 import PolicyShell, { PolicySection } from "../components/PolicyShell";
 
@@ -20,9 +19,9 @@ const RefundPolicy = () => (
         the time of purchase.
       </p>
       <p>
-        Payments are processed securely through{" "}
-        <strong>Razorpay Payment Solutions Pvt. Ltd.</strong> PremSetu does
-        not store your card, UPI, or banking credentials.
+        Payments are made directly via <strong>UPI</strong> (PhonePe, Google
+        Pay, Paytm, or any UPI app) to PremSetu's payment account. PremSetu
+        does not store your card, UPI, or banking credentials.
       </p>
     </PolicySection>
 
@@ -72,10 +71,10 @@ const RefundPolicy = () => (
         </li>
         <li>
           <strong>Payment deducted but account not upgraded:</strong> Your
-          payment was successfully debited by Razorpay but your PremSetu
-          account was not upgraded to paid status due to a technical failure
-          on our side. Please allow up to <strong>24 hours</strong> for
-          automatic reconciliation before raising a request.
+          UPI payment was successfully debited but your PremSetu account was
+          not upgraded to paid status due to a technical failure on our side.
+          Please allow up to <strong>24 hours</strong> for reconciliation
+          before raising a request.
         </li>
         <li>
           <strong>Unauthorised transaction:</strong> You have evidence that
@@ -104,9 +103,10 @@ const RefundPolicy = () => (
           <code>Refund Request — [Your Registered Email] — [Payment Date]</code>
         </li>
         <li>
-          <strong>Include:</strong> Your registered email address, the Razorpay
-          payment ID or order ID (visible in your payment receipt), the date
-          and amount of the transaction, and a brief description of the issue.
+          <strong>Include:</strong> Your registered email address, the UPI
+          transaction (UTR) ID visible in your UPI app's payment history, the
+          date and amount of the transaction, and a brief description of the
+          issue.
         </li>
       </ul>
       <p>
@@ -125,8 +125,8 @@ const RefundPolicy = () => (
           approval.
         </li>
         <li>
-          The refunded amount will be credited to the original payment source
-          (bank account, UPI ID, or card) via Razorpay.
+          The refunded amount will be credited to the UPI ID or bank account
+          from which the payment was made.
         </li>
         <li>
           Depending on your bank or payment provider, the credit may take an
