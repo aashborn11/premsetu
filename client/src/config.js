@@ -20,9 +20,9 @@ export const CHAT_ENABLED = false;
 //                   generated QR; leave "" to use the generated one
 export const PAYMENT = {
   AMOUNT_RUPEES: 499,
-  UPI_ID: "premsetu@upi", // ⚠ PLACEHOLDER — replace with your real UPI ID
+  UPI_ID: "7409868966@axl", // PhonePe / SBI account of Karmveer Singh
   PAYEE_NAME: "PremSetu",
-  PHONEPE_LINK: "", // ⚠ PLACEHOLDER — paste your PhonePe payment link (optional)
+  PHONEPE_LINK: "", // optional PhonePe payment-page link; "" hides the button
   QR_IMAGE: ""
 };
 
